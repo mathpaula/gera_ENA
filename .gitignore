@@ -1,7 +1,3 @@
-#Pastas de arquivos teste irrelevantes
-ex_csv/
-in_ex/
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
