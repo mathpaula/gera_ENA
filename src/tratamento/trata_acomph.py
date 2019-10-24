@@ -19,7 +19,7 @@ import datetime as dt
 def corrige_local_acomph():
     #Path é uma função da biblioteca padrão do Python pathlib que acha os diretórios próprios para
     #o sistema operacional em que o programa roda
-    local_acomph = Path("in_excel/acomph")
+    local_acomph = Path("../in_excel/acomph")
     data = get_data()
     #Variável para armazenar o nome do arquivo corrigido
     acomph = "ACOMPH_"+data+".xls"
@@ -59,9 +59,10 @@ def importa_planilha():
     bacias = {}
     local = corrige_local_acomph()
     planilha = pd.ExcelFile(local)
+    formata_data = lambda x: pd.datetime.strptime(x, "%Y %m %d")
     #Criação de vários DataFrames no dicionário, cada um com uma bacia
     for aba in planilha.sheet_names:
-        bacias[aba] = planilha.parse(aba)
+        bacias[aba] = planilha.parse(aba, parse_dates=True, date_parser=formata_data)
     return bacias
 
 
@@ -77,9 +78,9 @@ def trata():
         #Retira linhas que estão incompletas
         bacias[x].dropna(inplace=True)
         #Renomeia a coluna de datas
-        bacias[x].rename(columns={'Unnamed: 0':'Data'}, inplace=True)
+        bacias[x].rename(columns={'Unnamed: 0':'data'}, inplace=True)
         #Define o índice das linhas como a data
-        bacias[x].set_index('Data',inplace=True)
+        bacias[x].set_index('data',inplace=True)
         #Trasnposição do dataframe: agora as linhas são identificadas pelo posto
         bacias[x] = bacias[x].T
         #Importação de todos os índices. A maior bacia em 153 linhas
@@ -90,28 +91,23 @@ def trata():
             if i%8 != 0:
                 bacias[x].drop(linha, inplace=True)
             i+=1
-            bacias[x].index.names = ['Posto']
+        bacias[x].index.name = 'posto'
+            
     return bacias
 
 
 # ### Exporta a planilha tratada pra CSV
 
-# In[6]:
+# In[7]:
 
 
 def ex_final():
     df = trata()
     #A mesma biblioteca pathlib é usada para garantir portabilidade entre SO
-    local_csv = Path("ex_csv/acomph")
+    local_csv = Path("../ex_csv/acomph")
     for x in df:
         #Os CSV são ordenados por data e ordem alfabética
         nome_csv = "acomph_"+x+".csv"
         caminho = local_csv / nome_csv
         df[x].to_csv(caminho)
-
-
-# In[7]:
-
-
-ex_final()
 
