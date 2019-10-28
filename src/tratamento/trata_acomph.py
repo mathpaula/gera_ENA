@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[1]:
+# In[ ]:
 
 
 import pandas as pd
@@ -12,7 +12,7 @@ import datetime as dt
 
 # ### Correção do nome do ACOMPH de acordo com a data
 
-# In[2]:
+# In[ ]:
 
 
 
@@ -30,7 +30,7 @@ def corrige_local_acomph():
 
 # ### Ajuste da formatação de data
 
-# In[3]:
+# In[ ]:
 
 
 def get_data():
@@ -51,7 +51,7 @@ def get_data():
 
 # ### Função de importação do arquivo do ACOMPH
 
-# In[4]:
+# In[ ]:
 
 
 def importa_planilha():
@@ -62,13 +62,14 @@ def importa_planilha():
     formata_data = lambda x: pd.datetime.strptime(x, "%Y %m %d")
     #Criação de vários DataFrames no dicionário, cada um com uma bacia
     for aba in planilha.sheet_names:
-        bacias[aba] = planilha.parse(aba, parse_dates=True, date_parser=formata_data)
+        bacias[aba] = planilha.parse(aba, parse_dates=True,
+                                     date_parser=formata_data)
     return bacias
 
 
 # ### Filtragem dos dados: só temos vazões naturais e postos!
 
-# In[5]:
+# In[ ]:
 
 
 def trata():
@@ -98,7 +99,7 @@ def trata():
 
 # ### Exporta a planilha tratada pra CSV
 
-# In[7]:
+# In[ ]:
 
 
 def ex_final():
