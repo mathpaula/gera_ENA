@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[10]:
+# In[2]:
 
 
 import pandas as pd
@@ -11,7 +11,7 @@ from pathlib import Path
 
 # ### Importação das Regressões Semanais
 
-# In[11]:
+# In[3]:
 
 
 def importa_planilha():
@@ -23,7 +23,7 @@ def importa_planilha():
 
 # ### Retira colunas sem dados relevantes e renomeia pro csv ficar bonitinho
 
-# In[12]:
+# In[4]:
 
 
 def trata_planilha():
@@ -44,7 +44,7 @@ def trata_planilha():
 
 # ### Coloca as relações de data e posto em um DataFrame pra A0 separado de A1
 
-# In[16]:
+# In[5]:
 
 
 def separa_a0_a1():
@@ -60,7 +60,7 @@ def separa_a0_a1():
 
 # ### Cria um arquivo CSV para cada DF criado anteriormente
 
-# In[17]:
+# In[6]:
 
 
 def exporta_csv():
@@ -69,4 +69,15 @@ def exporta_csv():
     local_a1 = Path("../ex_csv/regressao/Regressão_A1.csv")
     a0.to_csv(local_a0)
     a1.to_csv(local_a1)
+
+
+# In[7]:
+
+
+def get_csv():
+    local_a0 = Path("../ex_csv/regressao/Regressão_A0.csv")
+    local_a1 = Path("../ex_csv/regressao/Regressão_A1.csv")
+    a0 = pd.read_csv(local_a0, index_col=0)
+    a1 = pd.read_csv(local_a1, index_col=0)
+    return a0, a1
 

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[ ]:
+# In[1]:
 
 
 import pandas as pd
@@ -12,8 +12,7 @@ import datetime as dt
 
 # ### Correção do nome do ACOMPH de acordo com a data
 
-# In[ ]:
-
+# In[2]:
 
 
 def corrige_local_acomph():
@@ -30,7 +29,7 @@ def corrige_local_acomph():
 
 # ### Ajuste da formatação de data
 
-# In[ ]:
+# In[3]:
 
 
 def get_data():
@@ -51,7 +50,7 @@ def get_data():
 
 # ### Função de importação do arquivo do ACOMPH
 
-# In[ ]:
+# In[4]:
 
 
 def importa_planilha():
@@ -69,7 +68,7 @@ def importa_planilha():
 
 # ### Filtragem dos dados: só temos vazões naturais e postos!
 
-# In[ ]:
+# In[5]:
 
 
 def trata():
@@ -93,22 +92,27 @@ def trata():
                 bacias[x].drop(linha, inplace=True)
             i+=1
         bacias[x].index.name = 'posto'
-            
+    bacias = pd.concat(bacias.values())
     return bacias
 
 
 # ### Exporta a planilha tratada pra CSV
 
-# In[ ]:
+# In[6]:
 
 
 def ex_final():
     df = trata()
     #A mesma biblioteca pathlib é usada para garantir portabilidade entre SO
-    local_csv = Path("../ex_csv/acomph")
-    for x in df:
-        #Os CSV são ordenados por data e ordem alfabética
-        nome_csv = "acomph_"+x+".csv"
-        caminho = local_csv / nome_csv
-        df[x].to_csv(caminho)
+    caminho = Path("../ex_csv/acomph.csv")
+    df.to_csv(caminho)
+
+
+# In[7]:
+
+
+def get_csv():
+    local = Path('../ex_csv/acomph.csv')
+    acomph = pd.read_csv(local, index_col=0)
+    return acomph
 
