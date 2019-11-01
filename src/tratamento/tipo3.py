@@ -1,24 +1,25 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[153]:
+# In[1]:
 
 
+from tratamento import trata_acomph
 import pandas as pd
 import numpy as np
 from datetime import date, timedelta
-from pathlib import Path
 
 
-# In[154]:
+# In[2]:
 
 
 def importa_acomph():
-    acomph = pd.read_csv('../../ex_csv/acomph.csv', index_col=0)
+    trata_acomph.ex_final()
+    acomph = trata_acomph.get_csv()
     return acomph
 
 
-# In[156]:
+# In[3]:
 
 
 def vazao_posto(posto):
@@ -26,7 +27,7 @@ def vazao_posto(posto):
     return acomph.loc[posto,:]
 
 
-# In[157]:
+# In[4]:
 
 
 def posto_37():
@@ -35,7 +36,7 @@ def posto_37():
     return vazao_posto_37
 
 
-# In[158]:
+# In[5]:
 
 
 def posto_38():
@@ -44,7 +45,7 @@ def posto_38():
     return vazao_posto_38
 
 
-# In[159]:
+# In[6]:
 
 
 def posto_39():
@@ -53,7 +54,7 @@ def posto_39():
     return vazao_posto_39
 
 
-# In[160]:
+# In[7]:
 
 
 def posto_40():
@@ -62,7 +63,7 @@ def posto_40():
     return vazao_posto_40
 
 
-# In[161]:
+# In[8]:
 
 
 def posto_42():
@@ -71,7 +72,7 @@ def posto_42():
     return vazao_posto_42
 
 
-# In[162]:
+# In[9]:
 
 
 def posto_43():
@@ -80,7 +81,7 @@ def posto_43():
     return vazao_posto_43
 
 
-# In[163]:
+# In[10]:
 
 
 def posto_45():
@@ -89,7 +90,7 @@ def posto_45():
     return vazao_posto_45
 
 
-# In[164]:
+# In[11]:
 
 
 def posto_46():
@@ -98,7 +99,7 @@ def posto_46():
     return vazao_posto_46
 
 
-# In[165]:
+# In[12]:
 
 
 def posto_66():
@@ -108,7 +109,7 @@ def posto_66():
     return vazao_posto_66
 
 
-# In[166]:
+# In[13]:
 
 
 def posto_75():
@@ -119,7 +120,7 @@ def posto_75():
     return vazao_posto_75
 
 
-# In[167]:
+# In[14]:
 
 
 def posto_126():
@@ -133,16 +134,16 @@ def posto_126():
     return vazao_posto_126
 
 
-# In[168]:
+# In[15]:
 
 
 def posto_127():
     #127(t) = 129(t) – 298(t) – 203(t) + 304(t)
-    vazao_posto_127 = vazao_posto(129) - vazao_posto(298) - vazao_posto(203) + vazao_posto(304)
+    vazao_posto_127 = vazao_posto(129) - posto_298() - vazao_posto(203) + vazao_posto(304)
     return vazao_posto_127
 
 
-# In[169]:
+# In[16]:
 
 
 def posto_131():
@@ -153,7 +154,7 @@ def posto_131():
     return vazao_posto_131
 
 
-# In[170]:
+# In[17]:
 
 
 def posto_132():
@@ -163,7 +164,7 @@ def posto_132():
     return vazao_posto_132
 
 
-# In[171]:
+# In[18]:
 
 
 def posto_176():
@@ -171,7 +172,7 @@ def posto_176():
     return
 
 
-# In[172]:
+# In[19]:
 
 
 def posto_285():
@@ -180,7 +181,7 @@ def posto_285():
     return vazao_posto_285
 
 
-# In[173]:
+# In[20]:
 
 
 def posto_292():
@@ -213,7 +214,7 @@ def posto_292():
     return vazao_posto_292
 
 
-# In[174]:
+# In[21]:
 
 
 def posto_298():
@@ -221,7 +222,7 @@ def posto_298():
     #Se 190 < 125(t) ≤  209 → 298(t) = 119 m³/s     
     #Se 209 < 125(t) ≤  250 → 298(t) = 125(t) - 90 m³/s
     #Se 125(t) > 250 → 298(t) = 160 m³/s 
-    vazao_posto_298 = vazao_posto(125)
+    vazao_posto_298 = vazao_posto(76)
     for i in range(30):
         if(vazao_posto(125).iloc[i] <= 190): vazao_posto_298.iloc[i] = (vazao_posto(125).iloc[i] * 119) / 190
         elif(vazao_posto(125).iloc[i] <= 209): vazao_posto_298.iloc[i] = 119
@@ -230,7 +231,7 @@ def posto_298():
     return vazao_posto_298
 
 
-# In[175]:
+# In[22]:
 
 
 def posto_299():
@@ -239,7 +240,7 @@ def posto_299():
     return vazao_posto_299
 
 
-# In[176]:
+# In[23]:
 
 
 def posto_303():
@@ -250,7 +251,7 @@ def posto_303():
     return vazao_posto_303
 
 
-# In[177]:
+# In[24]:
 
 
 def posto_304():
@@ -259,7 +260,7 @@ def posto_304():
     return vazao_posto_304
 
 
-# In[178]:
+# In[25]:
 
 
 def posto_306():
@@ -268,7 +269,7 @@ def posto_306():
     return vazao_posto_306
 
 
-# In[179]:
+# In[26]:
 
 
 def posto_315():
@@ -277,7 +278,7 @@ def posto_315():
     return vazao_posto_315
 
 
-# In[180]:
+# In[27]:
 
 
 def posto_316():
@@ -288,7 +289,7 @@ def posto_316():
     return vazao_posto_316
 
 
-# In[181]:
+# In[28]:
 
 
 def posto_317():
@@ -299,17 +300,11 @@ def posto_317():
     return vazao_posto_317
 
 
-# In[182]:
+# In[29]:
 
 
 def posto_318():
     #318(t) = 116(t) + 117(t) + 118(t) + 0,1*[161(t) - 117(t) - 118(t)]
     vazao_posto_318 = vazao_posto(116) + vazao_posto(117) + vazao_posto(118) + 0.1 * (vazao_posto(161) - vazao_posto(117) - vazao_posto(118))
     return vazao_posto_318
-
-
-# In[ ]:
-
-
-
 
