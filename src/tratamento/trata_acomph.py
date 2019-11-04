@@ -61,8 +61,7 @@ def importa_planilha():
     formata_data = lambda x: pd.datetime.strptime(x, "%Y %m %d")
     #Criação de vários DataFrames no dicionário, cada um com uma bacia
     for aba in planilha.sheet_names:
-        bacias[aba] = planilha.parse(aba, parse_dates=True,
-                                     date_parser=formata_data)
+        bacias[aba] = planilha.parse(aba, parse_dates=True, date_parser=formata_data)
     return bacias
 
 
@@ -93,6 +92,7 @@ def trata():
             i+=1
         bacias[x].index.name = 'posto'
     bacias = pd.concat(bacias.values())
+    bacias.drop_duplicates(inplace=True)
     return bacias
 
 
@@ -115,4 +115,10 @@ def get_csv():
     local = Path('../ex_csv/acomph.csv')
     acomph = pd.read_csv(local, index_col=0)
     return acomph
+
+
+# In[8]:
+
+
+ex_final()
 

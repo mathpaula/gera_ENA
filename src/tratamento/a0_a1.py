@@ -39,6 +39,7 @@ def trata_planilha():
              'Unnamed: 4',
              'Unnamed: 22'],
             axis=1, inplace=True)
+    df.drop_duplicates(inplace=True)
     return df
 
 
@@ -80,4 +81,10 @@ def get_csv():
     a0 = pd.read_csv(local_a0, index_col=0)
     a1 = pd.read_csv(local_a1, index_col=0)
     return a0, a1
+
+
+# In[8]:
+
+
+exporta_csv()
 
