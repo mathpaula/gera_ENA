@@ -9,10 +9,8 @@ import numpy as np
 from pathlib import Path
 
 
-# ### Importação das Regressões Semanais
-
-# In[3]:
-
+# ### 
+# %% Importação das Regressões Semanais
 
 def importa_planilha():
     local_regress = Path("../in_excel/regressao/Regressões_PMO_2019.xls")
@@ -21,9 +19,7 @@ def importa_planilha():
     return regress
 
 
-# ### Retira colunas sem dados relevantes e renomeia pro csv ficar bonitinho
-
-# In[4]:
+# %% Retira colunas sem dados relevantes e renomeia pro csv ficar bonitinho
 
 
 def trata_planilha():
@@ -43,9 +39,7 @@ def trata_planilha():
     return df
 
 
-# ### Coloca as relações de data e posto em um DataFrame pra A0 separado de A1
-
-# In[5]:
+# %% Coloca as relações de data e posto em um DataFrame pra A0 separado de A1
 
 
 def separa_a0_a1():
@@ -58,8 +52,6 @@ def separa_a0_a1():
         a1.rename(columns={(str(i)+'.1') : str(i)}, inplace=True)
     return a0, a1
 
-
-# ### Cria um arquivo CSV para cada DF criado anteriormente
 
 # In[6]:
 
@@ -81,10 +73,4 @@ def get_csv():
     a0 = pd.read_csv(local_a0, index_col=0)
     a1 = pd.read_csv(local_a1, index_col=0)
     return a0, a1
-
-
-# In[8]:
-
-
-exporta_csv()
 

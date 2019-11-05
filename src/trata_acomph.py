@@ -119,6 +119,3 @@ def get_csv():
 
 # In[8]:
 
-
-ex_final()
-

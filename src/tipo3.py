@@ -4,7 +4,7 @@
 # In[1]:
 
 
-from tratamento import trata_acomph
+import trata_acomph
 import pandas as pd
 import numpy as np
 from datetime import date, timedelta
