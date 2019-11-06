@@ -35,7 +35,6 @@ def trata_planilha():
              'Unnamed: 4',
              'Unnamed: 22'],
             axis=1, inplace=True)
-    df.drop_duplicates(inplace=True)
     return df
 
 
@@ -50,6 +49,8 @@ def separa_a0_a1():
     a1.rename(columns={'Unnamed: 21':'base'}, inplace=True)
     for i in range(1,13):
         a1.rename(columns={(str(i)+'.1') : str(i)}, inplace=True)
+    a0.sort_index(inplace = True)
+    a1.sort_index(inplace = True)
     return a0, a1
 
 

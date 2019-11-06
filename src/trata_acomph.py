@@ -92,7 +92,7 @@ def trata():
             i+=1
         bacias[x].index.name = 'posto'
     bacias = pd.concat(bacias.values())
-    bacias.drop_duplicates(inplace=True)
+    bacias.sort_index(inplace=True)
     return bacias
 
 
@@ -104,7 +104,7 @@ def trata():
 def ex_final():
     df = trata()
     #A mesma biblioteca pathlib é usada para garantir portabilidade entre SO
-    caminho = Path("../ex_csv/acomph.csv")
+    caminho = Path("../ex_csv/vazoes/acomph.csv")
     df.to_csv(caminho)
 
 
@@ -112,10 +112,11 @@ def ex_final():
 
 
 def get_csv():
-    local = Path('../ex_csv/acomph.csv')
+    local = Path('../ex_csv/vazoes/acomph.csv')
     acomph = pd.read_csv(local, index_col=0)
     return acomph
 
 
 # In[8]:
 
+ex_final()
