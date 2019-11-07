@@ -6,13 +6,15 @@
 
 import pandas as pd
 from datetime import date, timedelta
+from pathlib import Path
 
 
 # In[2]:
 
 
 def importa_vazoes():
-    vazoes = pd.read_csv('../ex_csv/vazoes/vazões_para_tipo3.csv',index_col=0)
+    local = Path('../ex_csv/vazoes/vazões_para_tipo3.csv')
+    vazoes = pd.read_csv(local, index_col=0)
     return vazoes
 
 
@@ -21,7 +23,6 @@ def importa_vazoes():
 
 def vazao_posto(posto):
     vazoes = importa_vazoes()
-    posto = str(posto)
     return vazoes.loc[posto,:]
 
 
@@ -35,8 +36,7 @@ def posto_37():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_37 = p118
-    for i in range(30):
-        vazao_posto_37.iloc[i] = p237 - 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i]) - p117.iloc[i] - p118.iloc[i]
+    vazao_posto_37 = p237 - 0.1 * (p161 - p117 - p118) - p117 - p118
     return vazao_posto_37
 
 
@@ -50,8 +50,7 @@ def posto_38():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_38 = p117
-    for i in range(30):
-        vazao_posto_38.iloc[i] = p238.iloc[i] - 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i]) - p117.iloc[i] - p118.iloc[i]
+    vazao_posto_38 = p238 - 0.1 * (p161 - p117 - p118) - p117 - p118
     return vazao_posto_38
 
 
@@ -65,8 +64,7 @@ def posto_39():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_39 = p117
-    for i in range(30):
-        vazao_posto_39.iloc[i] = p239.iloc[i] - 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i]) - p117.iloc[i] - p118.iloc[i]
+    vazao_posto_39 = p239 - 0.1 * (p161 - p117 - p118) - p117 - p118
     return vazao_posto_39
 
 
@@ -80,8 +78,7 @@ def posto_40():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_40 = p117
-    for i in range(30):
-        vazao_posto_40.iloc[i] = p240.iloc[í] - 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i]) - p117.iloc[i] - p118.iloc[i]
+    vazao_posto_40 = p240 - 0.1 * (p161 - p117 - p118) - p117 - p118
     return vazao_posto_40
 
 
@@ -95,8 +92,7 @@ def posto_42():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_42 = p117
-    for i in range(30):
-        vazao_posto_42.iloc[i] = p242.iloc[i] - 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i]) - p117.iloc[i] - p118.iloc[i]
+    vazao_posto_42 = p242 - 0.1 * (p161 - p117 - p118) - p117 - p118
     return vazao_posto_42
 
 
@@ -110,8 +106,7 @@ def posto_43():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_43 = p117
-    for i in range(30):
-        vazao_posto_43.iloc[i] = p243.iloc[i] - 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i]) - p117.iloc[i] - p118.iloc[i]
+    vazao_posto_43 = p243 - 0.1 * (p161 - p117 - p118) - p117 - p118
     return vazao_posto_43
 
 
@@ -125,8 +120,7 @@ def posto_45():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_45 = p117
-    for i in range(30):
-        vazao_posto_45.iloc[i] = p245.iloc[i] - 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i]) - p117.iloc[i] - p118.iloc[i]
+    vazao_posto_45 = p245 - 0.1 * (p161 - p117 - p118) - p117 - p118
     return vazao_posto_45
 
 
@@ -141,8 +135,7 @@ def posto_46():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_46 = p117
-    for i in range(30):
-        vazao_posto_46.iloc[i] = p246.iloc[i] - 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i]) - p117.iloc[i] - p118.iloc[i]
+    vazao_posto_46 = p246 - 0.1 * (p161 - p117 - p118) - p117 - p118
     return vazao_posto_46
 
 
@@ -157,8 +150,7 @@ def posto_66():
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     vazao_posto_66 = p117
-    for i in range(30):
-        vazao_posto_66.iloc[i] = p266.iloc[i] - 0.1 * p161.iloc[i] - 0.9 * p117.iloc[i] - 0.9 * p118.iloc[i]
+    vazao_posto_66 = p266 - 0.1 * p161 - 0.9 * p117 - 0.9 * p118
     return vazao_posto_66
 
 
@@ -196,7 +188,6 @@ def posto_126():
 def posto_127():
     #127(t) = 129(t) – 298(t) – 203(t) + 304(t)
     vazao_posto_127 = vazao_posto(129) - posto_298() - vazao_posto(203) + posto_304()
-    vazao_posto_127 = vazao_posto_127.iloc[0,:]
     return vazao_posto_127
 
 
@@ -373,9 +364,11 @@ def posto_317():
 
 def posto_318():
     #318(t) = 116(t) + 117(t) + 118(t) + 0,1*[161(t) - 117(t) - 118(t)]
+    p116 = vazao_posto(116)
     p117 = vazao_posto(117)
     p118 = vazao_posto(118)
     p161 = vazao_posto(161)
-    vazao_posto_318 = vazao_posto(116) + p117.iloc[i] + p118.iloc[i] + 0.1 * (p161.iloc[i] - p117.iloc[i] - p118.iloc[i])
+    vazao_posto_318 = p116
+    vazao_posto_318 = p116 + p117 + p118 + 0.1 * (p161 - p117 - p118)
     return vazao_posto_318
 

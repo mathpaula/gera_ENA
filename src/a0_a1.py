@@ -75,3 +75,6 @@ def get_csv():
     a1 = pd.read_csv(local_a1, index_col=0)
     return a0, a1
 
+
+# %%
+

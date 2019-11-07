@@ -74,10 +74,12 @@ def posto_320():
     
 
 def cria_tabela():
+    acomph = importa_vazao()
+    p118 = acomph.loc[118,:]
     p119 = posto_119()
     p301 = posto_301()
     p320 = posto_320()
-    postos = {119: p119, 301: p301, 320: p320}
+    postos = {119: p119, 118: p118, 301: p301, 320: p320}
     tabela = pd.DataFrame(data=postos)
     tabela = tabela.T
     return tabela

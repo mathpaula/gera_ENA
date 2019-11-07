@@ -10,33 +10,19 @@ from pathlib import Path
 import trata_acomph, a0_a1, tipo3, faltantes_inversos
 
 
-# In[62]:
-
-
-def get_prod():
-    loc = Path('../ex_csv/produtibilidades/prod.csv')
-    prod = pd.read_csv(loc, index_col=0)
-    for i,row in prod.head(154).iterrows():
-        row['prod'] = row['prod'].replace(",",".")
-        row['prod'] = float(row['prod'])
-    return prod
-
-
 # In[63]:
 
 
 def importa_arquivos():
     trata_acomph.ex_final()
     acomph = trata_acomph.get_csv()
-    produtibilidade = get_prod()
-    a0_a1.exporta_csv()
     a0, a1 = a0_a1.get_csv()
     a0.sort_index(inplace=True)
     a1.sort_index(inplace=True)
     local = Path('../ex_csv')
     local_post = local / 'postos.csv'
     postos = pd.read_csv(local_post, index_col=0)
-    return acomph, a0, a1, postos, produtibilidade
+    return acomph, a0, a1, postos
 
 
 # In[64]:
@@ -66,19 +52,6 @@ def trata_vazoes_base(acomph, a1):
     return vazoes_base
 
 
-
-# %% Vazões usadas em regressões tipo 3 
-
-
-def vazoes_uteis(acomph, a0, a1, postos):
-    tipo0 = vazoes_tipo0(acomph, postos)
-    tipo1 = regressao_tipo_1(acomph, a0, a1)
-    vazoes = pd.concat([tipo0,tipo1])
-    faltantes = faltantes_inversos.cria_tabela()
-    vazoes = pd.concat([vazoes,faltantes])
-    vazoes.to_csv('../ex_csv/vazoes/vazões_para_tipo3.csv')
-#    tipo3 = regressao_tipo_3()
-    return vazoes
 
 
 # In[]
@@ -118,13 +91,26 @@ def regressao_tipo_3():
                          45: tipo3.posto_45(), 46: tipo3.posto_46(), 66: tipo3.posto_66(), 75: tipo3.posto_75()}
     
     postos_tipo3 = pd.DataFrame(data=data_postos_tipo3)
-    return data_postos_tipo3
+    return postos_tipo3.T
 
 
 # %%
 
 
-#a,b,c,d,e = importa_arquivos()
-#v = faltantes_inversos.cria_tabela
-t = regressao_tipo_3()
-aaaaa = tipo3.posto_285
+def vazoes_finais():
+    acomph, a0, a1, postos = importa_arquivos()
+    tipo0 = vazoes_tipo0(acomph, postos)
+    tipo1 = regressao_tipo_1(acomph, a0, a1)
+    vazoes = pd.concat([tipo0,tipo1])
+    vazoes.drop([303,306,285], inplace = True)
+    faltantes = faltantes_inversos.cria_tabela()
+    vazoes = pd.concat([vazoes,faltantes])
+    vazoes.sort_index(inplace = True)
+    vazoes.dropna(inplace=True)
+    local = Path('../ex_csv/vazoes/vazões_para_tipo3.csv')
+    vazoes.to_csv(local)
+    tipo3 = regressao_tipo_3()
+    vazoes = pd.concat([vazoes, tipo3])
+    vazoes.sort_index(inplace = True)
+    return vazoes
+
