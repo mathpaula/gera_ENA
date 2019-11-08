@@ -65,9 +65,11 @@ def vazoes_tipo0(acomph, postos):
 # In[68]:
 
 
-def regressao_tipo_1(acomph, a0, a1):
+def regressao_tipo_1(acomph, a0, a1, postos):
     meses, datas = get_datas()
     vazoes_base = trata_vazoes_base(acomph, a1)
+    vazoes_base = vazoes_base.join(postos.query('tipo == 1'), on = 'posto', how = 'inner')
+    vazoes_base.drop(['nome','tipo','sub_mer','bacia','ree'], axis=1, inplace = True)
     ind = vazoes_base.head(70).index
     col = vazoes_base.T.head(70).index
     vazoes_tipo1 = pd.DataFrame(0,index = ind, columns = col)
@@ -88,7 +90,8 @@ def regressao_tipo_3():
                          292: tipo3.posto_292(), 298: tipo3.posto_298(), 299: tipo3.posto_299(), 303: tipo3.posto_303(), 
                          306: tipo3.posto_306(), 318: tipo3.posto_318(), 37: tipo3.posto_37(), 38: tipo3.posto_38(), 
                          39: tipo3.posto_39(), 40: tipo3.posto_40(), 42: tipo3.posto_42(), 43: tipo3.posto_43(),
-                         45: tipo3.posto_45(), 46: tipo3.posto_46(), 66: tipo3.posto_66(), 75: tipo3.posto_75()}
+                         45: tipo3.posto_45(), 46: tipo3.posto_46(), 66: tipo3.posto_66(), 75: tipo3.posto_75(),
+                         302: tipo3.posto_302()}
     
     postos_tipo3 = pd.DataFrame(data=data_postos_tipo3)
     return postos_tipo3.T
@@ -100,9 +103,8 @@ def regressao_tipo_3():
 def vazoes_finais():
     acomph, a0, a1, postos = importa_arquivos()
     tipo0 = vazoes_tipo0(acomph, postos)
-    tipo1 = regressao_tipo_1(acomph, a0, a1)
+    tipo1 = regressao_tipo_1(acomph, a0, a1, postos)
     vazoes = pd.concat([tipo0,tipo1])
-    vazoes.drop([303,306,285], inplace = True)
     faltantes = faltantes_inversos.cria_tabela()
     vazoes = pd.concat([vazoes,faltantes])
     vazoes.sort_index(inplace = True)
@@ -114,3 +116,7 @@ def vazoes_finais():
     vazoes.sort_index(inplace = True)
     return vazoes
 
+
+# %% 
+a,b,c,d = importa_arquivos()
+t1 = regressao_tipo_1(a,b,c,d)

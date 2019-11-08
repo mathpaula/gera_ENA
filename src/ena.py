@@ -58,11 +58,20 @@ def exporta_ena():
     
 # %%
     
-ena = calc_ena()
-posto = pd.read_csv('../ex_csv/postos.csv', index_col=0)
-ena = ena.join(posto.query('sub_mer == "S"'), on = 'posto', how = 'inner')
-ena.dropna(inplace = True)
-for i in range(30):
-    dia = ena.iloc[:,i].sum()
-    print(dia)
+def get_soma_sub_mer():
+#    cod_sub_mer = str(cod_sub_mer)
+    ena = calc_ena()
+    local = Path('../ex_csv/postos.csv')
+    postos = pd.read_csv(local, index_col = 0)
+    submercado = ena.join(postos.query('sub_mer == "N"'), on = 'posto', how = 'inner')
+    col = ena.T.head(30).index
+    soma = pd.DataFrame(index = ['soma'], columns = col)
+    for i in range(30):
+        soma.iloc[0,i] = submercado.iloc[:,i].sum()
+    return soma, submercado
 
+
+# %%
+    
+som, postos = get_soma_sub_mer()
+postos.to_excel('../N.xls')

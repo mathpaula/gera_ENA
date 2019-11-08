@@ -245,25 +245,27 @@ def posto_292():
     vazao_posto_292 = vazao_posto(288)
     p288 = vazao_posto(288)
     for i in range(30):
-        mes = (date.today()-timedelta(days = 30-i)).month
-        if (mes == 1): vazao_base = 1100
-        elif (mes == 2): vazao_base = 1600
-        elif (mes == 3): vazao_base = 4000
-        elif (mes == 4): vazao_base = 8000
-        elif (mes == 5): vazao_base = 4000
-        elif (mes == 6): vazao_base = 2000
-        elif (mes == 7): vazao_base = 1200
-        elif (mes == 8): vazao_base = 900
-        elif (mes == 9): vazao_base = 750
-        elif (mes == 10): vazao_base = 700
-        elif (mes == 11): vazao_base = 800
-        elif (mes == 12): vazao_base = 900
-        
-        if(p288.iloc[i] <= vazao_base):
-            vazao_posto_292.iloc[i] = 0
+        if(p288.iloc[i] <= 1600): vazao_posto_292 = 0
         else:
-            if(p288.iloc[i] <= vazao_base + 13900): vazao_posto_292.iloc[i] = p288.iloc[i] - vazao_base
-            else: vazao_posto_292.iloc[i] = 13900
+            mes = (date.today()-timedelta(days = 30-i)).month
+            if (mes == 1): vazao_base = 1100
+            elif (mes == 2): vazao_base = 1600
+            elif (mes == 3): vazao_base = 4000
+            elif (mes == 4): vazao_base = 8000
+            elif (mes == 5): vazao_base = 4000
+            elif (mes == 6): vazao_base = 2000
+            elif (mes == 7): vazao_base = 1200
+            elif (mes == 8): vazao_base = 900
+            elif (mes == 9): vazao_base = 750
+            elif (mes == 10): vazao_base = 700
+            elif (mes == 11): vazao_base = 800
+            elif (mes == 12): vazao_base = 900
+        
+            if(p288.iloc[i] <= vazao_base):
+                vazao_posto_292.iloc[i] = 0
+            else:
+                if(p288.iloc[i] <= vazao_base + 13900): vazao_posto_292.iloc[i] = p288.iloc[i] - vazao_base
+                else: vazao_posto_292.iloc[i] = 13900
     return vazao_posto_292
 
 
@@ -359,6 +361,14 @@ def posto_317():
     return vazao_posto_317
 
 
+# %%
+    
+
+def posto_302():
+    vazao_posto_302 = vazao_posto(288) - posto_292()
+    return vazao_posto_302
+
+    
 # In[29]:
 
 
