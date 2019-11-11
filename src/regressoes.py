@@ -86,12 +86,13 @@ def regressao_tipo_1(acomph, a0, a1, postos):
 
 
 def regressao_tipo_3():
-    data_postos_tipo3 = {126: tipo3.posto_126(), 131: tipo3.posto_131(), 176: tipo3.posto_176(), 285: tipo3.posto_285(), 
-                         292: tipo3.posto_292(), 298: tipo3.posto_298(), 299: tipo3.posto_299(), 303: tipo3.posto_303(), 
-                         306: tipo3.posto_306(), 318: tipo3.posto_318(), 37: tipo3.posto_37(), 38: tipo3.posto_38(), 
-                         39: tipo3.posto_39(), 40: tipo3.posto_40(), 42: tipo3.posto_42(), 43: tipo3.posto_43(),
-                         45: tipo3.posto_45(), 46: tipo3.posto_46(), 66: tipo3.posto_66(), 75: tipo3.posto_75(),
-                         302: tipo3.posto_302()}
+    data_postos_tipo3 = {126: tipo3.posto_126(), 127: tipo3.posto_127(), 131: tipo3.posto_131(), 132: tipo3.posto_132(),
+                         176: tipo3.posto_176(), 285: tipo3.posto_285(), 292: tipo3.posto_292(), 298: tipo3.posto_298(), 
+                         299: tipo3.posto_299(), 302: tipo3.posto_302(), 303: tipo3.posto_303(), 304: tipo3.posto_304(),
+                         306: tipo3.posto_306(), 315: tipo3.posto_315(), 316: tipo3.posto_316(), 317: tipo3.posto_317(),
+                         318: tipo3.posto_318(), 37: tipo3.posto_37(), 38: tipo3.posto_38(), 39: tipo3.posto_39(), 
+                         40: tipo3.posto_40(), 42: tipo3.posto_42(), 43: tipo3.posto_43(), 45: tipo3.posto_45(), 
+                         46: tipo3.posto_46(), 66: tipo3.posto_66(), 75: tipo3.posto_75()}
     
     postos_tipo3 = pd.DataFrame(data=data_postos_tipo3)
     return postos_tipo3.T
@@ -119,4 +120,4 @@ def vazoes_finais():
 
 # %% 
 a,b,c,d = importa_arquivos()
-t1 = regressao_tipo_1(a,b,c,d)
+t1 = vazoes_finais()

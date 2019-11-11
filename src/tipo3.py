@@ -245,7 +245,7 @@ def posto_292():
     vazao_posto_292 = vazao_posto(288)
     p288 = vazao_posto(288)
     for i in range(30):
-        if(p288.iloc[i] <= 1600): vazao_posto_292 = 0
+        if(p288.iloc[i] <= vazao_base): vazao_posto_292 = 0
         else:
             mes = (date.today()-timedelta(days = 30-i)).month
             if (mes == 1): vazao_base = 1100
@@ -381,4 +381,9 @@ def posto_318():
     vazao_posto_318 = p116
     vazao_posto_318 = p116 + p117 + p118 + 0.1 * (p161 - p117 - p118)
     return vazao_posto_318
+
+
+#%%
+    
+
 

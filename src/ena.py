@@ -13,7 +13,7 @@ from pathlib import Path
 
 def cria_ena():
     vazoes = reg.vazoes_finais()
-    ind = vazoes.head(170).index
+    ind = vazoes.head(181).index
     col = vazoes.T.head(31).index
     ena = pd.DataFrame(0, index = ind, columns = col)
     return ena
@@ -25,10 +25,9 @@ def cria_ena():
 def get_prod():
     loc = Path('../ex_csv/produtibilidades/prod.csv')
     prod = pd.read_csv(loc, index_col=0)
-    for i,row in prod.head(154).iterrows():
+    for i,row in prod.head(180).iterrows():
         row['prod'] = row['prod'].replace(",",".")
         row['prod'] = float(row['prod'])
-    prod.index = prod.index.drop_duplicates()
     return prod
 
 
@@ -41,9 +40,11 @@ def calc_ena():
     vazoes = reg.vazoes_finais()
     ena = cria_ena()
     for i in range(30):
-        ena.iloc[:,i] = vazoes.iloc[:,i] * produtibilidades.iloc[:,0]
-#    ena.fillna(0, inplace = True)
+        energia = vazoes.iloc[:,i].multiply(produtibilidades.iloc[:,0])
+        ena.iloc[:,i] = energia
+    ena.fillna(0, inplace = True)
     ena.index.rename('posto', inplace = True)
+    ena.sort_index(inplace=True)
     return ena
 
 
@@ -58,12 +59,11 @@ def exporta_ena():
     
 # %%
     
-def get_soma_sub_mer():
-#    cod_sub_mer = str(cod_sub_mer)
+def get_soma_sub_mer(cod_sub_mer):
     ena = calc_ena()
     local = Path('../ex_csv/postos.csv')
     postos = pd.read_csv(local, index_col = 0)
-    submercado = ena.join(postos.query('sub_mer == "N"'), on = 'posto', how = 'inner')
+    submercado = ena.join(postos.query('sub_mer == @cod_sub_mer'), on = 'posto', how = 'inner')
     col = ena.T.head(30).index
     soma = pd.DataFrame(index = ['soma'], columns = col)
     for i in range(30):
@@ -71,7 +71,4 @@ def get_soma_sub_mer():
     return soma, submercado
 
 
-# %%
-    
-som, postos = get_soma_sub_mer()
-postos.to_excel('../N.xls')
+
