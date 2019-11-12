@@ -13,7 +13,7 @@ from pathlib import Path
 
 
 def importa_vazoes():
-    local = Path('../ex_csv/vazoes/vazões_para_tipo3.csv')
+    local = Path('ex_csv/vazoes/vazões_para_tipo3.csv')
     vazoes = pd.read_csv(local, index_col=0)
     return vazoes
 

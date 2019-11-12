@@ -13,7 +13,7 @@ from pathlib import Path
 # %% Importação das Regressões Semanais
 
 def importa_planilha():
-    local_regress = Path("../in_excel/regressao/Regressões_PMO_2019.xls")
+    local_regress = Path("in_excel/regressao/Regressões_PMO_2019.xls")
     df = pd.ExcelFile(local_regress)
     regress =  df.parse("Correlações_Semanais", header=4)
     return regress
@@ -59,8 +59,8 @@ def separa_a0_a1():
 
 def exporta_csv():
     a0, a1 = separa_a0_a1()
-    local_a0 = Path("../ex_csv/regressao/Regressão_A0.csv")
-    local_a1 = Path("../ex_csv/regressao/Regressão_A1.csv")
+    local_a0 = Path("ex_csv/regressao/Regressão_A0.csv")
+    local_a1 = Path("ex_csv/regressao/Regressão_A1.csv")
     a0.to_csv(local_a0)
     a1.to_csv(local_a1)
 
@@ -69,8 +69,8 @@ def exporta_csv():
 
 
 def get_csv():
-    local_a0 = Path("../ex_csv/regressao/Regressão_A0.csv")
-    local_a1 = Path("../ex_csv/regressao/Regressão_A1.csv")
+    local_a0 = Path("ex_csv/regressao/Regressão_A0.csv")
+    local_a1 = Path("ex_csv/regressao/Regressão_A1.csv")
     a0 = pd.read_csv(local_a0, index_col=0)
     a1 = pd.read_csv(local_a1, index_col=0)
     return a0, a1
