@@ -5,6 +5,7 @@
 
 from src import regressoes as reg
 import pandas as pd
+import numpy as np
 from pathlib import Path
 
 
@@ -81,3 +82,21 @@ def ena_mercados():
     ena_sub = pd.concat([subSE, subS, subNE, subN ])
     return ena_sub
 
+
+# %%
+    
+
+def ena_ree():
+    ena = calc_ena()
+    local = Path('ex_csv/postos.csv')
+    postos = pd.read_csv(local, index_col = 0)    
+    col = ena.T.head(30).index
+    ind = np.arrange(1,13)
+    ree = pd.DataFrame(index = ind, columns = col)
+    for i in range(1,13):
+        key = str(i)
+        ree_ena = ena.join(postos.query('ree == @key'), on = 'posto', how = 'inner')
+        for j in range(30):
+            temp= ree_ena.iloc[:,i-1].sum()
+            ree.iloc[i-1,j] = temp
+    return ree
