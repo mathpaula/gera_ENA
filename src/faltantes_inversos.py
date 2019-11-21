@@ -12,7 +12,7 @@ from datetime import date, timedelta
 
 
 def importa_vazao():
-    vazoes_acomph = pd.read_csv('../ex_csv/vazoes/acomph.csv', index_col=0)
+    vazoes_acomph = pd.read_csv('ex_csv/vazoes/acomph.csv', index_col=0)
     return vazoes_acomph
 
 
@@ -20,8 +20,8 @@ def importa_vazao():
     
 
 def importa_a0_a1():
-    a0 = pd.read_csv('../ex_csv/regressao/Regressão_A0.csv', index_col=0)
-    a1 = pd.read_csv('../ex_csv/regressao/Regressão_A1.csv', index_col=0)
+    a0 = pd.read_csv('ex_csv/regressao/Regressão_A0.csv', index_col=0)
+    a1 = pd.read_csv('ex_csv/regressao/Regressão_A1.csv', index_col=0)
     return a0, a1
     
     

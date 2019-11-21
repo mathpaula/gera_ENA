@@ -3,8 +3,9 @@
 # %%
 
 
-import regressoes as reg
+from src import regressoes as reg
 import pandas as pd
+import numpy as np
 from pathlib import Path
 
 
@@ -23,7 +24,7 @@ def cria_ena():
 
 
 def get_prod():
-    loc = Path('../ex_csv/produtibilidades/prod.csv')
+    loc = Path('ex_csv/produtibilidades/prod.csv')
     prod = pd.read_csv(loc, index_col=0)
     for i,row in prod.head(180).iterrows():
         row['prod'] = row['prod'].replace(",",".")
@@ -53,22 +54,42 @@ def calc_ena():
 
 def exporta_ena():
     ena = calc_ena()
-    local = Path('../ex_csv/ena.csv')
+    local = Path('ex_csv/ena.csv')
     ena.to_csv(local)
     
     
 # %%
-    
-def get_soma_sub_mer(cod_sub_mer):
-    ena = calc_ena()
-    local = Path('../ex_csv/postos.csv')
+
+
+def ena_mercados(ena):
+    local = Path('ex_csv/postos.csv')
     postos = pd.read_csv(local, index_col = 0)
-    submercado = ena.join(postos.query('sub_mer == @cod_sub_mer'), on = 'posto', how = 'inner')
-    col = ena.T.head(30).index
-    soma = pd.DataFrame(index = ['soma'], columns = col)
-    for i in range(30):
-        soma.iloc[0,i] = submercado.iloc[:,i].sum()
-    return soma, submercado
+    ena_por_mercado = pd.concat([ena,postos], axis=1)
+    ena_por_mercado.drop(['nome','ree','tipo','bacia'], axis=1, inplace=True)
+    ena_m = ena_por_mercado.groupby(['sub_mer']).sum()
+    return ena_m
 
 
+# %%
+    
+
+def ena_ree(ena):
+    local = Path('ex_csv/postos.csv')
+    postos = pd.read_csv(local, index_col = 0)    
+    ena_por_ree = pd.concat([ena,postos], axis=1)
+    ena_por_ree.drop(['nome','tipo','bacia','sub_mer'], axis=1, inplace=True)
+    ena_r = ena_por_ree.groupby(['ree']).sum()
+    return ena_r
+
+
+# %%
+    
+
+def ena_bacia(ena):
+    local = Path('ex_csv/postos.csv')
+    postos = pd.read_csv(local, index_col = 0)
+    ena_por_bacia = pd.concat([ena, postos], axis=1)
+    ena_por_bacia.drop(['nome','ree','tipo','sub_mer'], axis=1, inplace = True)
+    ena_b = ena_por_bacia.groupby(['bacia']).sum()
+    return ena_b
 

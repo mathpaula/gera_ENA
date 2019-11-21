@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import trata_acomph, a0_a1
+from src import trata_acomph, a0_a1
 import pandas as pd
 
 # %%

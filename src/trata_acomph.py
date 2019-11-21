@@ -18,7 +18,7 @@ import datetime as dt
 def corrige_local_acomph():
     #Path é uma função da biblioteca padrão do Python pathlib que acha os diretórios próprios para
     #o sistema operacional em que o programa roda
-    local_acomph = Path("../in_excel/acomph")
+    local_acomph = Path("in_excel/acomph")
     data = get_data()
     #Variável para armazenar o nome do arquivo corrigido
     acomph = "ACOMPH_"+data+".xls"
@@ -104,7 +104,7 @@ def trata():
 def ex_final():
     df = trata()
     #A mesma biblioteca pathlib é usada para garantir portabilidade entre SO
-    caminho = Path("../ex_csv/vazoes/acomph.csv")
+    caminho = Path("ex_csv/vazoes/acomph.csv")
     df.to_csv(caminho)
 
 
@@ -112,7 +112,7 @@ def ex_final():
 
 
 def get_csv():
-    local = Path('../ex_csv/vazoes/acomph.csv')
+    local = Path('ex_csv/vazoes/acomph.csv')
     acomph = pd.read_csv(local, index_col=0)
     return acomph
 

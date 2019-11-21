@@ -7,7 +7,7 @@
 import pandas as pd
 from datetime import date, timedelta
 from pathlib import Path
-import trata_acomph, a0_a1, tipo3, faltantes_inversos
+from src import trata_acomph, a0_a1, tipo3, faltantes_inversos
 
 
 # In[63]:
@@ -19,7 +19,7 @@ def importa_arquivos():
     a0, a1 = a0_a1.get_csv()
     a0.sort_index(inplace=True)
     a1.sort_index(inplace=True)
-    local = Path('../ex_csv')
+    local = Path('ex_csv')
     local_post = local / 'postos.csv'
     postos = pd.read_csv(local_post, index_col=0)
     return acomph, a0, a1, postos
@@ -110,14 +110,10 @@ def vazoes_finais():
     vazoes = pd.concat([vazoes,faltantes])
     vazoes.sort_index(inplace = True)
     vazoes.dropna(inplace=True)
-    local = Path('../ex_csv/vazoes/vazões_para_tipo3.csv')
+    local = Path('ex_csv/vazoes/vazões_para_tipo3.csv')
     vazoes.to_csv(local)
     tipo3 = regressao_tipo_3()
     vazoes = pd.concat([vazoes, tipo3])
     vazoes.sort_index(inplace = True)
     return vazoes
 
-
-# %% 
-a,b,c,d = importa_arquivos()
-t1 = vazoes_finais()
