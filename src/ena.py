@@ -64,7 +64,9 @@ def exporta_ena():
 def ena_mercados(ena):
     local = Path('ex_csv/postos.csv')
     postos = pd.read_csv(local, index_col = 0)
-    ena_por_mercado = 
+    ena_por_mercado = pd.concat([ena,postos], axis=1)
+    ena_por_mercado.drop(['nome','ree','tipo','bacia'], axis=1, inplace=True)
+    ena_m = ena_por_mercado.groupby(['sub_mer']).sum()
     return ena_m
 
 
@@ -74,14 +76,10 @@ def ena_mercados(ena):
 def ena_ree(ena):
     local = Path('ex_csv/postos.csv')
     postos = pd.read_csv(local, index_col = 0)    
-    col = ena.T.head(30).index
-    ind = np.arange(1,13)
-    ree = pd.DataFrame(index = ind, columns = col)
-    for i in np.arange(1,13):
-        ree_ena = ena.join(postos.query('ree == @i'), on = 'posto', how = 'inner')
-        for j in range(30):
-            ree.iloc[i-1,j] = ree_ena.iloc[:,j].sum()
-    return ree
+    ena_por_ree = pd.concat([ena,postos], axis=1)
+    ena_por_ree.drop(['nome','tipo','bacia','sub_mer'], axis=1, inplace=True)
+    ena_r = ena_por_ree.groupby(['ree']).sum()
+    return ena_r
 
 
 # %%
@@ -94,5 +92,4 @@ def ena_bacia(ena):
     ena_por_bacia.drop(['nome','ree','tipo','sub_mer'], axis=1, inplace = True)
     ena_b = ena_por_bacia.groupby(['bacia']).sum()
     return ena_b
-
 
