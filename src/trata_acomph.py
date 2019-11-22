@@ -117,6 +117,3 @@ def get_csv():
     return acomph
 
 
-# In[8]:
-
-ex_final()
