@@ -1,1 +1,0 @@
-Coloque a versão mais recente do acomph na pasta "acomph" dentro da pasta "in_excel" e rode o arquivo "install.py" na pasta "src"
