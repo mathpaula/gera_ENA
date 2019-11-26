@@ -52,10 +52,9 @@ def calc_ena():
 # %%
     
 
-def exporta_ena():
-    ena = calc_ena()
-    local = Path('ex_csv/ena.csv')
-    ena.to_csv(local)
+def exporta_ena(ena, nome):
+    local = Path('ex_csv/ENA/'+nome+'.xls')
+    ena.to_excel(local)
     
     
 # %%
@@ -92,4 +91,8 @@ def ena_bacia(ena):
     ena_por_bacia.drop(['nome','ree','tipo','sub_mer'], axis=1, inplace = True)
     ena_b = ena_por_bacia.groupby(['bacia']).sum()
     return ena_b
+
+
+# %%
+    
 
