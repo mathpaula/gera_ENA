@@ -22,7 +22,7 @@ def get_data(data):
 def importa_plan(datas):
     ipdo = []
     for data in datas:
-        local = Path('../in_excel/ipdo/')
+        local = Path('in_excel/ipdo/')
         arquivo = 'IPDO-' + get_data(data) + '.xlsm'
         local = local / arquivo
         ipdo.append(pd.read_excel(local, sheet_name = 'IPDO'))
@@ -95,26 +95,38 @@ def separa_renomeia():
     NE = []
     for i, tab in enumerate(tabelas):
         data = datas[i]
-        S.append(tab['Sul'].copy())
+        ind = tab.index.copy()
+        S.append(pd.Series(tab['Sul'], ind, copy=True))
         S[i].name = data
-        SE.append(tab['Sudeste'].copy())
+        SE.append(pd.Series(tab['Sudeste'], ind, copy=True))
         SE[i].name = data
-        N.append(tab['Norte'].copy())
+        N.append(pd.Series(tab['Norte'], ind, copy=True))
         N[i].name = data
-        NE.append(tab['Nordeste'].copy())
+        NE.append(pd.Series(tab['Nordeste'], ind, copy=True))
         NE[i].name = data
     S = pd.concat(S, axis=1)
     SE = pd.concat(SE, axis=1)
     N = pd.concat(N, axis=1)
     NE = pd.concat(NE, axis=1)
-    return SE, S, NE, N
+    return SE, S, NE, N, cargas
     
     
 def monta_tabela():
-    pass
+    
+    se, s, ne, n, cargas = separa_renomeia()
+    tabela = pd.concat([se, s, ne, n], axis=0)
+    nomes = [" SE", " S", " NE", " N"]
+    j=-1
+    for i in range(32):
+        if(i%8==0): j+=1
+        tabela.index.values[i] = tabela.index.values[i] + nomes[j]
+    tabela = pd.concat([cargas, tabela], axis=0)
+    return tabela
 
-d = dias_semana()
-se, s, ne, n = separa_renomeia()
-for i, nome in enumerate(se.index.values):
-    se.index.values[i] = nome + ' se'
-        
+def exporta_excel():
+    tab = monta_tabela()
+    local = Path('ex_csv/ipdo/ipdo.xls')
+    tab.to_excel(local)
+
+    
+           
