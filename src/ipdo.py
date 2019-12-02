@@ -31,9 +31,8 @@ def importa_plan(datas):
 def dias_semana():
     datas = []
     hoje = dt.date.today()
-    dia_semana = (hoje.weekday()) % 7
-    for i in range(dia_semana+1):
-        datas = [hoje - dt.timedelta(days= i+1 )] + datas
+    for i in range(1,30):
+        datas = [hoje - dt.timedelta(days= i)] + datas
     return datas
 
 def carga(ipdo, x, datas, sub):
@@ -128,5 +127,3 @@ def exporta_excel():
     local = Path('ex_csv/ipdo/ipdo.xls')
     tab.to_excel(local)
 
-    
-           
