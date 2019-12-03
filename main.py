@@ -6,7 +6,7 @@ Created on Mon Nov 25 15:28:24 2019
 @author: mazucanti
 """
 
-from src import ena, ipdo
+from src.saida import ena, ipdo, carga
 
 ena_geral = ena.calc_ena()
 ena_submercado = ena.ena_mercados(ena_geral)
