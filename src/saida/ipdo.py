@@ -122,7 +122,7 @@ def monta_tabela():
     tabela = pd.concat([cargas, tabela], axis=0)
     return tabela
 
-def exporta_excel():
+def exporta_ipdo():
     tab = monta_tabela()
     local = Path('saídas/ipdo/ipdo.xls')
     tab.to_excel(local)
