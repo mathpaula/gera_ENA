@@ -39,8 +39,21 @@ def separa_estags(carga_por_estag):
             item[i] = texto.split()
     return carga
 
-def organiza_tabela(carga, rv):
-    ind = np.arange(0+rv,len(carga)+rv)
+
+def get_semanas(nro_est, mes, ano):
+    datas = []
+    data = str(ano)+'-'+str(mes)+'-'+'01'
+    data_rv = dt.datetime.strptime(data, '%Y-%m-%d')
+    no_semana = data_rv.isoweekday() % 7
+    inicio = data_rv - dt.timedelta(days = no_semana + 1)
+    for i in nro_est:
+        datas.append(inicio + dt.timedelta(weeks = int(i)))
+    return datas
+
+
+def organiza_tabela(carga, rv, mes, ano):
+    estags = np.arange(rv,rv+len(carga))
+    ind = get_semanas(estags, mes, ano)
     col = ["SE","S","NE","N"]
     carga_decomp = pd.DataFrame(0, index = ind, columns = col)
     cargahora = 0
@@ -56,11 +69,11 @@ def organiza_tabela(carga, rv):
     return carga_decomp
 
 
-def exporta_carga(rv:int):
+def exporta_carga(rv:int, mes, ano):
     carga_bruto = importa_carga(rv)
     carga_por_estag = limpa_carga(carga_bruto)
     carga = separa_estags(carga_por_estag)
-    carga_decomp = organiza_tabela(carga, rv)
+    carga_decomp = organiza_tabela(carga, rv, mes, ano)
     local = Path('saídas/carga/carga_RV'+str(rv)+'.xls')
     carga_decomp.to_excel(local)
     return carga_decomp

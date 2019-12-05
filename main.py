@@ -17,7 +17,7 @@ try:
 except FileNotFoundError:
     print("O acomph de hoje não foi encontrado!\nVerifique a pasta entrada\\acomph e verifique se o arquivo se encontra lá")
 except:
-    print("Alguma outra coisa deu errado.\nVerifique se não houve alteração no código!")
+    print("Alguma outra coisa deu erradocom a ENA.\nVerifique se não houve alteração no código!")
 else:
     ena_submercado.sort_index(ascending = False, inplace = True)
     
@@ -32,21 +32,25 @@ try:
     ipdo.exporta_ipdo()
 except FileNotFoundError:
     print("Algum arquivo de IPDO dos últimos 30 dias não foi encontrado!")
-
+except:
+    print("Alguma outra coisa deu errado com o IPDO.\nVerifique se não houve alteração no código!")
 
     
-at = 0
-ant = 1
+RV_atual = 1
+RV_anterior = 0
+mes = 10
+ano = 2019
+
 
 try:
-    atual = carga.exporta_carga(at)
-    anterior = carga.exporta_carga(ant)
+    atual = carga.exporta_carga(RV_atual, mes, ano)
+    anterior = carga.exporta_carga(RV_anterior, mes, ano)
 except FileNotFoundError:
     print("Uma das cargas não foi encontrada!\nVerifique se os dois arquivos estão na pasta apropriada")
 except:
-    print("Alguma outra coisa deu errado.\nVerifique se não houve alteração no código!")
+    print("Alguma outra coisa deu errado com a carga.\nVerifique se não houve alteração no código!")
 else:
     comp = atual - anterior
     comp.dropna(inplace = True)
-    local = Path('saídas/carga/comparação_rv'+str(ant)+'_rv'+str(at)+'.xls')
+    local = Path('saídas/carga/comparação_rv'+str(RV_anterior)+'_rv'+str(RV_atual)+'.xls')
     comp.to_excel(local)
