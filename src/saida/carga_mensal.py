@@ -11,19 +11,25 @@ import datetime as dt
 from pathlib import Path
 
 
-def get_datas():
+def get_datas(fw: bool):
     data = dt.date.today()
     mes_atual = data.month
     ano_atual = data.year
-    mes_anterior = mes_atual - 1 
-    ano_anterior = (data - dt.timedelta(days = 30)).year
-    meses = [mes_anterior, mes_atual]
-    anos = [ano_anterior, ano_atual]
+    if(fw):
+        mes_anterior = (data + dt.timedelta(days = 30)).month
+        ano_anterior = (data + dt.timedelta(days = 30)).year
+        meses = [mes_atual, mes_anterior]
+        anos = [ano_atual, ano_anterior]
+    else:
+        mes_anterior = (data - dt.timedelta(days = 30)).month
+        ano_anterior = (data - dt.timedelta(days = 30)).year
+        meses = [mes_anterior, mes_atual]
+        anos = [ano_anterior, ano_atual]
     return meses, anos
 
 
 def get_nome():
-    meses, anos = get_datas()
+    meses, anos = get_datas(False)
     nomes = []
     for mes in meses:
         if mes == 1: nomes.append('Janeiro')
@@ -44,7 +50,7 @@ def get_nome():
 
 
 def importa_cargas_mensais():
-    local = Path('entradas/carga_mensal/')
+    local = Path('../../entradas/carga_mensal/')
     nomes = get_nome()
     local0 = local / nomes[0]
     local1 = local / nomes[1]
@@ -52,6 +58,18 @@ def importa_cargas_mensais():
     tab_mes1 = pd.read_excel(local1)
     return tab_mes0, tab_mes1
     
-    
+
 def compara_meses():
+    tab_mes0, tab_mes1 = importa_cargas_mensais()
+    meses, anos = get_datas(True)
+    datas = []
+    col = ['SE','S','NE','N']
+    for i in range(2):
+        datas.append(str(anos[i])+'-'+str(meses[i])+'-01')
+    tab_mes0.query('TYPE == "MEDIUM" and (DATE == @datas[0] or DATE == @datas[1])', inplace = True)
+    tab_mes1.query('TYPE == "MEDIUM" and (DATE == @datas[0] or DATE == @datas[1])', inplace = True)
+    tab_mes0.set_index('DATE', inplace = True)
+    return tab_mes0, tab_mes1
     
+
+t0, t1 = compara_meses()

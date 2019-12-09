@@ -40,13 +40,13 @@ def separa_estags(carga_por_estag):
     return carga
 
 
-def get_semanas(nro_est, mes, ano):
+def get_semanas(estags, mes, ano):
     datas = []
     data = str(ano)+'-'+str(mes)+'-'+'01'
     data_rv = dt.datetime.strptime(data, '%Y-%m-%d')
     no_semana = data_rv.isoweekday() % 7
     inicio = data_rv - dt.timedelta(days = no_semana + 1)
-    for i in nro_est:
+    for i in estags:
         datas.append(inicio + dt.timedelta(weeks = int(i)))
     return datas
 
