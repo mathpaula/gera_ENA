@@ -15,7 +15,7 @@ try:
     ena_bacias = ena.ena_bacia(ena_geral)
     ena_ree = ena.ena_ree(ena_geral)
 except FileNotFoundError:
-    print("O acomph de hoje não foi encontrado!\nVerifique a pasta entrada\\acomph e verifique se o arquivo se encontra lá")
+    print("O acomph de hoje não foi encontrado!\nVerifique a pasta entrada\\acomph e confirme se o arquivo se encontra lá")
 except:
     print("Alguma outra coisa deu erradocom a ENA.\nVerifique se não houve alteração no código!")
 else:
@@ -25,6 +25,7 @@ else:
     ena.exporta_ena(ena_submercado, 'ENA_Sub_Mer')
     ena.exporta_ena(ena_ree, 'ENA_REE')
     ena.exporta_ena(ena_bacias, 'ENA_Bacias')
+    print('ENA calculada com sucesso!')
 
 
    
@@ -34,6 +35,8 @@ except FileNotFoundError:
     print("Algum arquivo de IPDO dos últimos 30 dias não foi encontrado!")
 except:
     print("Alguma outra coisa deu errado com o IPDO.\nVerifique se não houve alteração no código!")
+else:
+    print("IPDO extraído com sucesso!")
 
     
 RV_atual = 1
@@ -54,3 +57,4 @@ else:
     comp.dropna(inplace = True)
     local = Path('saídas/carga/comparação_rv'+str(RV_anterior)+'_rv'+str(RV_atual)+'.xls')
     comp.to_excel(local)
+    print("Cargas requisitadas calculadas e comparadas com sucesso!")
