@@ -55,7 +55,7 @@ def gera_nome(fw):
 
 
 def importa_cargas_mensais():
-    local = Path('../../entradas/carga_mensal/')
+    local = Path('entradas/carga_mensal/')
     nomes = gera_nome(False)
     local0 = local / nomes[0]
     local1 = local / nomes[1]
@@ -74,28 +74,40 @@ def compara_meses():
     tab_mes1.query('TYPE == "MEDIUM" and (DATE == @datas[0] or DATE == @datas[1])', inplace = True)
     tab_mes0.set_index('DATE', inplace = True)
     tab_mes1.set_index('DATE', inplace = True)
+    tab1 = tab_mes1.copy()
+    csem = compara_semanal(tab1, meses[1], anos[1])
     SE = tab_mes0.query('SOURCE == "SUDESTE"')['LOAD'] - tab_mes1.query('SOURCE == "SUDESTE"')['LOAD']
     S = tab_mes0.query('SOURCE == "SUL"')['LOAD'] - tab_mes1.query('SOURCE == "SUL"')['LOAD']
     NE = tab_mes0.query('SOURCE == "NORDESTE"')['LOAD'] - tab_mes1.query('SOURCE == "NORDESTE"')['LOAD']
     N = tab_mes0.query('SOURCE == "NORTE"')['LOAD'] - tab_mes1.query('SOURCE == "NORTE"')['LOAD']
-    return  SE, S, NE, N
+    return  SE, S, NE, N, csem
 
 
-def compara_semanal(tab0, tab1, mes, ano):
-    for i in range(5):
-        try:
-            local = Path('saídas/carga/carga_RV'+str(i)+'.xls')
-        except:
-            continue
-        else:
-            carga = pd.read_excel(local)
-            
-    return carga
+def compara_semanal(tab1, mes, ano):
+    arquivos = Path('saídas/carga').glob('**/*')
+    files = [arquivo for arquivo in arquivos if arquivo.is_file()]
+    loaded = False
+    for file in files:
+        if loaded: break
+        for i in range(5,-1,-1):
+            if(file == Path("saídas/carga/carga_RV"+str(i)+".xls")):
+                tab = pd.read_excel(file, index_col = 0)
+                loaded = True
+                break
+    data = str(ano)+'-'+str(mes)+'-01'
+    tab1.query('DATE == @data',inplace=True)
+    tab1.set_index('SOURCE', inplace=True)
+    se = tab.iloc[tab.index.size-1, 0] - tab1.loc['SUDESTE', 'LOAD']
+    s = tab.iloc[tab.index.size-1, 1] - tab1.loc['SUL', 'LOAD']
+    ne = tab.iloc[tab.index.size-1, 2] - tab1.loc['NORDESTE', 'LOAD']
+    n = tab.iloc[tab.index.size-1, 3] - tab1.loc['NORTE', 'LOAD']
+    return [se,s,ne,n]
+ 
             
 
 
 def monta_tabela():
-    se,s,ne,n = compara_meses()
+    se,s,ne,n,csem = compara_meses()
     se.name = 'SE'
     s.name = 'S'
     ne.name = 'NE'
@@ -104,10 +116,16 @@ def monta_tabela():
     tab.sort_index(inplace = True)
     nomes, meses, anos = get_nome(True)
     for i, nome in enumerate(nomes):
-        nomes[i] = nome+' '+str(anos[i])
+        nomes[i] = nome+'_'+str(anos[i])
     tab.index = nomes
-    
-    return tab
+    comp_sem = pd.Series(csem, index = ['SE','S','NE','N'], 
+                         name = nomes[1]+' DECOMP')
+    tab = tab.append(comp_sem)
+    return tab, nomes[0]
+
+def exporta_tab():
+    tab, nome = monta_tabela()
+    local = Path('saídas/carga/'+'PMO_'+nome)
+    tab.to_excel(local)
 
 
-t = compara_semanal(None, None, None, None)
