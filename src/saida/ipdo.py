@@ -31,7 +31,7 @@ def importa_plan(datas):
 def dias_semana():
     datas = []
     hoje = dt.date.today()
-    for i in range(1,30):
+    for i in range(1,31):
         datas = [hoje - dt.timedelta(days= i)] + datas
     return datas
 
