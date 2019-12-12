@@ -118,23 +118,23 @@ def compara_semanal(tab1, mes, ano):
 #Função que recebe todos os dados tratados e os organiza em uma tabela
 def monta_tabela():
     se,s,ne,n,csem = compara_meses()
+    # Renomeia as séries de acordo com o submercado apropriado
     se.name = 'SE'
     s.name = 'S'
     ne.name = 'NE'
     n.name = 'N'
-    tab = pd.concat([se,s,ne,n], axis=1)
-    tab.sort_index(inplace = True)
-    nomes, meses, anos = get_nome(True)
-    for i, nome in enumerate(nomes):
-        nomes[i] = nome+'_'+str(anos[i])
-    tab.index = nomes
+    tab = pd.concat([se,s,ne,n], axis=1) #Cria a tabela a partir das séries
+    tab.sort_index(inplace = True) #Ordena as datas
+    nomes, meses, anos = get_nome(True) #Pega nomes dos meses, os números e os anos apropriados para o mês
+    for i, nome in enumerate(nomes): 
+        nomes[i] = nome+'_'+str(anos[i]) #Reescreve os nomes com os anos apropriados
+    tab.index = nomes #Usa os novos nomes de índice
     comp_sem = pd.Series(csem, index = ['SE','S','NE','N'], 
-                         name = nomes[1]+' DECOMP')
-    tab = tab.append(comp_sem)
-    return tab, nomes[0]
+                         name = nomes[1]+' DECOMP') # Cria uma série com o vetor das diferenças entre a previsão do PMO e do DECOMP
+    tab = tab.append(comp_sem) #Adiciona a série criada e propriamente nomeada na tabela das diferenças do PMO
+    return tab, nomes[0] #Esse nome é o nome do mês atual, sendo retornado para uso na exportação do arquivo
 
 def exporta_tab():
     tab, nome = monta_tabela()
-    local = Path('saídas/carga/'+'PMO_'+nome+'.xls')
+    local = Path('saídas/carga/'+'PMO_'+nome+'.xls') #Exportação com o nome retornado na função anterior
     tab.to_excel(local)
-

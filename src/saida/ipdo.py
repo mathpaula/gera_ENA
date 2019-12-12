@@ -5,50 +5,56 @@ from pathlib import Path
 import datetime as dt
 
 
+#Formata sa datas para atender ao padrão dos nomes das planilhas de IPDO
 def get_data(data):
-    dia = data.day
-    if dia<10:
-        dia = '0' + str(dia)
-    dia = str(dia)
-    mes = data.month
+    dia = data.day #Recebe o dia da data do parâmetro
+    if dia<10: 
+        dia = '0' + str(dia) #Adiciona o 0 antes de cada valor menor que 10
+    dia = str(dia) #Transforma em String
+    mes = data.month #recebe os mês da data do parâmetro
     if mes<10:
-        mes = '0' + str(mes)
-    mes = str(mes)
-    ano = str(data.year)
-    data = dia+'-'+mes+'-'+ano
+        mes = '0' + str(mes) #Adiciona o 0 antes de cada valor menor que 10
+    mes = str(mes) #Transforma em string
+    ano = str(data.year) #Recebe o ano da data do parâmetro e já a converte para string
+    data = dia+'-'+mes+'-'+ano #Cria a string de data formatada como nos arquivos ipdo
     return data
 
 
+# Pega as datas do último mês e importa cada planilha de cada data
 def importa_plan(datas):
-    ipdo = []
-    for data in datas:
-        local = Path('entradas/ipdo/')
-        arquivo = 'IPDO-' + get_data(data) + '.xlsm'
-        local = local / arquivo
-        ipdo.append(pd.read_excel(local, sheet_name = 'IPDO'))
-    return ipdo
+    ipdo = [] #Vetor que armazenará todos os dataframes (df)
+    for data in datas: #Itera cada data
+        local = Path('entradas/ipdo/') #Cria o caminho até a pasta das planilhas
+        arquivo = 'IPDO-' + get_data(data) + '.xlsm' #Nome das planilhas com a data formatada propriamente
+        local = local / arquivo #Concatena o diretório ao nome, criando o endereço completo
+        ipdo.append(pd.read_excel(local, sheet_name = 'IPDO')) #Lê a planilha em um df e o armazena no vetor de ipdo
+    return ipdo #Cada índice corresponde a uma data do intervalo de 30 dias
 
+
+#Armazena em um vetor todas as datas dos últimos 30 dias
 def dias_semana():
-    datas = []
-    hoje = dt.date.today()
-    for i in range(1,31):
-        datas = [hoje - dt.timedelta(days= i)] + datas
+    datas = [] #Vetor que armazenará as datas em ordem crescente
+    hoje = dt.date.today() #Pega a data atual para referência
+    for i in range(1,31): #Laço de 1 a 30
+        datas = [hoje - dt.timedelta(days= i)] + datas #Obtém as datas dos últimos 30 dias e adiciona a mais recente ao final da lista
     return datas
 
+
+#Recebe como parâmetro um nº de linha, as tabelas, as datas e os submercados para separar a carga de cada um deles
 def carga(ipdo, x, datas, sub):
-    carga = []
-    i = 0
-    for data in datas:
-        carga.append(ipdo[i].loc[x,'Unnamed: 12':'Unnamed: 14'])
-        carga[i].rename({x:data}, inplace = True)
-        carga[i].name = data
-        carga[i].rename({'Unnamed: 12': "carga prog "+sub, 'Unnamed: 14': "carga verif "+sub}, inplace = True)
-        i+=1
+    carga = [] #Onde serão armazenadas as cargas
+    for i,data in enumerate(datas): #itera cada data associada a um índice
+        carga.append(ipdo[i].loc[x,'Unnamed: 12':'Unnamed: 14']) #Recorta as tabelas para ter só as células de cargas
+        carga[i].rename({x:data}, inplace = True) #Renomeia o número da linha com a data
+        carga[i].name = data #Faz a mesma coisa de novo?
+        #As cargas são identificadas por verificadas, programadas e pelo submercado
+        carga[i].rename({'Unnamed: 12': "carga prog "+sub, 'Unnamed: 14': "carga verif "+sub}, inplace = True) 
     return carga
 
 
+#Pega as tabelas e retira colunas e linhas inúteis, recorta os valores de carga e a tabela de ENA
 def divide_infos():
-    datas = dias_semana()
+    datas = dias_semana() #Recebe o vetor com os últimos trinta dias em ordem crescente
     ipdo = importa_plan(datas)
     table = []
     for plan in ipdo:
