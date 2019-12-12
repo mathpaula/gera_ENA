@@ -65,6 +65,6 @@ try:
 except FileNotFoundError:
     print("As cargas semanais não foram calculadas propriamente ou algum PMO não está presente no diretório apropriado")
 except:
-    print("Algo deu errado! Cheque o código")
+    print("Algo deu errado com a carga mensal! Cheque o código")
 else:
     print("Carga mensal comparada com sucesso!")
