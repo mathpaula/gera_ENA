@@ -32,7 +32,7 @@ def importa_plan(datas):
 
 
 #Armazena em um vetor todas as datas dos últimos 30 dias
-def dias_semana():
+def dias_mes():
     datas = [] #Vetor que armazenará as datas em ordem crescente
     hoje = dt.date.today() #Pega a data atual para referência
     for i in range(1,31): #Laço de 1 a 30
@@ -54,82 +54,86 @@ def carga(ipdo, x, datas, sub):
 
 #Pega as tabelas e retira colunas e linhas inúteis, recorta os valores de carga e a tabela de ENA
 def divide_infos():
-    datas = dias_semana() #Recebe o vetor com os últimos trinta dias em ordem crescente
-    ipdo = importa_plan(datas)
-    table = []
-    for plan in ipdo:
+    datas = dias_mes() #Recebe o vetor com os últimos trinta dias em ordem crescente
+    ipdo = importa_plan(datas) #Armazena todas as planilhas em ordem crescente de data
+    table = [] #Tabelas de cada ipdo em ordem de data crescente
+    for plan in ipdo: #Itera as planilhas
         plan.drop(['Unnamed: 0', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4',
                'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7',
                 'Unnamed: 8','Unnamed: 9', 'Unnamed: 11', 
-                'Unnamed: 13'], axis = 1, inplace = True)
-        plan.drop([59], inplace=True)
-        table.append(plan.loc[58:63, 'DADOS':'Unnamed: 23'])
+                'Unnamed: 13'], axis = 1, inplace = True) #Remove todas as colunas inúteis do df
+        plan.drop([59], inplace=True) #Remove linha inútil
+        table.append(plan.loc[58:63, 'DADOS':'Unnamed: 23']) # Recorta a tabela dos ipdo
 
-    cargaN = carga(ipdo, 21, datas, 'N')
-    cargaNE = carga(ipdo, 29, datas, 'NE')
-    cargaS = carga(ipdo, 43, datas, 'S')
-    cargaSE = carga(ipdo, 36, datas, 'SE')
-    cargas_sep = [cargaSE,cargaS,cargaNE,cargaN]
+    cargaN = carga(ipdo, 21, datas, 'N') # Pega as cargas do Norte na linha 21
+    cargaNE = carga(ipdo, 29, datas, 'NE') #Pega as cargas do Nordeste na linha 29
+    cargaS = carga(ipdo, 43, datas, 'S') #Pega as cargas do Sul na linha 43
+    cargaSE = carga(ipdo, 36, datas, 'SE') #Pega as cargas do Sudeste na linha 36
+    cargas_sep = [cargaSE,cargaS,cargaNE,cargaN] #Organiza as cargas recortadas em uma tabela
     return table, cargas_sep
 
 
+#Organiza as tabelas de carga e as "tabelinhas" dos ipdo com nomes e organização apropriada
 def organiza_info():
-    i=0
-    tabelas, cargas_sep = divide_infos()
-    for item in range(len(tabelas)):
-        tabelas[item] = tabelas[item].T
-        tabelas[item].iloc[0,0] = 'Submercados'
-        tabelas[item].dropna(axis = 0, inplace = True)
-        tabelas[item].set_index(58, inplace=True)
-        tabelas[item] = tabelas[item].T
-        tabelas[item].set_index('Submercados', inplace=True)
-        tabelas[item] = tabelas[item].T
-    for elem in cargas_sep:
-        cargas_sep[i] = pd.concat(elem, axis = 1)
-        i+=1
-    cargas = pd.concat(cargas_sep, axis=0)
+    tabelas, cargas_sep = divide_infos() #Armazena as tabelas de cada ipdo e as cargas separadas
+    for item in range(len(tabelas)): # Itera as tabelas de um jeito bem idiota porque existem problemas de referência
+        tabelas[item] = tabelas[item].T #Transpõe a tabela para uso de funções de índice
+        tabelas[item].iloc[0,0] = 'Submercados' #Renomeia o único quadro sem nada relevante para ser usado de índice posteriormente
+        tabelas[item].dropna(axis = 0, inplace = True) #Exclui as linhas sem dados relevantes
+        tabelas[item].set_index(58, inplace=True) #Coloca a linha de submercados como índice
+        tabelas[item] = tabelas[item].T #Transpõe para mais jogadas com índices
+        tabelas[item].set_index('Submercados', inplace=True) # Coloca o índice "submercado" e exclui a coluna de números
+        tabelas[item] = tabelas[item].T # Transpõe a tabela para ser usada propriamente
+    for i, elem in enumerate(cargas_sep): #itera cada carga de cada submercado
+        cargas_sep[i] = pd.concat(elem, axis = 1) #Adiciona cada carga em uma tabela para cada submercado
+    cargas = pd.concat(cargas_sep, axis=0) # Reúne todas as tabelas em uma só devidamente identificada
     return tabelas, cargas
 
 
+# Pega as tabelinhas e identifica os atributos de acordo com o submercado a qual ele se refere
 def separa_renomeia():
-    tabelas, cargas = organiza_info()
-    datas = dias_semana()
+    tabelas, cargas = organiza_info() # recebe as tabelas e a tabela de cargas
+    datas = dias_mes() #Recebe os últimos 30 dias do mês em ordem crescente
+    #Vetores identificados com o submercado apropriado que receberão series com recortes de atributo de cada dia
     S = []
     N = []
     SE = []
     NE = []
-    for i, tab in enumerate(tabelas):
-        data = datas[i]
-        ind = tab.index.copy()
-        S.append(pd.Series(tab['Sul'], ind, copy=True))
-        S[i].name = data
+    for i, tab in enumerate(tabelas): #Itera as tabelas
+        data = datas[i] #recebe a data apropriada para as tabelas
+        ind = tab.index.copy() #Copia o índice das tabelas
+        # Adiciona a série ao vetor apropriado com o índice da tabela
+        # Muda o nome da série para ser identificada pela data em seguida, sempre assim até o final do loop
+        #Faz isso para cada submercado individualmente
+        S.append(pd.Series(tab['Sul'], ind, copy=True)) 
+        S[i].name = data 
         SE.append(pd.Series(tab['Sudeste'], ind, copy=True))
         SE[i].name = data
         N.append(pd.Series(tab['Norte'], ind, copy=True))
         N[i].name = data
         NE.append(pd.Series(tab['Nordeste'], ind, copy=True))
         NE[i].name = data
-    S = pd.concat(S, axis=1)
-    SE = pd.concat(SE, axis=1)
-    N = pd.concat(N, axis=1)
-    NE = pd.concat(NE, axis=1)
+    S = pd.concat(S, axis=1) #Junta todas as informações de S em uma tabela
+    SE = pd.concat(SE, axis=1) #Junta todas as informações de SE em uma tabela
+    N = pd.concat(N, axis=1) #Junta todas as informações de N em uma tabela
+    NE = pd.concat(NE, axis=1) #Junta todas as informações de NE em uma tabela
     return SE, S, NE, N, cargas
     
     
+#Cria a tabela com todas as informações e renomeia os atributos de acordo com o submercado a qual eles se referem
 def monta_tabela():
-    
-    se, s, ne, n, cargas = separa_renomeia()
-    tabela = pd.concat([se, s, ne, n], axis=0)
-    nomes = [" SE", " S", " NE", " N"]
-    j=-1
-    for i in range(32):
-        if(i%8==0): j+=1
-        tabela.index.values[i] = tabela.index.values[i] + nomes[j]
-    tabela = pd.concat([cargas, tabela], axis=0)
+    se, s, ne, n, cargas = separa_renomeia() #Recebe as tabelas e as cargas
+    tabela = pd.concat([se, s, ne, n], axis=0) #Junta todas as tabelas sem renomear em uma tabela enorme
+    nomes = [" SE", " S", " NE", " N"] #Vetor dos nomes dos submercados
+    j=-1 #índice do vetor de submercados
+    for i in range(32): #como o índice usa a mesma referência para todas as séries, para renomear propriamente se faz necessário um loop
+        if(i%8==0): j+=1 #Os atributos se referem a um submercado diferente a cada 8 valores
+        tabela.index.values[i] = tabela.index.values[i] + nomes[j] #Adiciona o nome do submercado no atributo
+    tabela = pd.concat([cargas, tabela], axis=0) #Junta a carga com as tabelas
     return tabela
 
 def exporta_ipdo():
     tab = monta_tabela()
-    local = Path('saídas/ipdo/ipdo.xls')
+    local = Path('saídas/ipdo/ipdo.xls') #Exporta para a pasta de ipdo nas sáidas como xls
     tab.to_excel(local)
 

@@ -39,15 +39,15 @@ else:
     print("IPDO extraído com sucesso!")
 
     
-RV_atual = 1
-RV_anterior = 0
+RV_atual = 2
+RV_anterior = 1
 mes = 12
 ano = 2019
 
 
 try:
-    atual = carga.exporta_carga(RV_atual, mes, ano)
     anterior = carga.exporta_carga(RV_anterior, mes, ano)
+    atual = carga.exporta_carga(RV_atual, mes, ano)
 except FileNotFoundError:
     print("Uma das cargas não foi encontrada!\nVerifique se os dois arquivos estão na pasta apropriada")
 except:
@@ -55,7 +55,8 @@ except:
 else:
     comp = atual - anterior
     comp.dropna(inplace = True)
-    local = Path('saídas/carga/comparação_rv'+str(RV_anterior)+'_rv'+str(RV_atual)+'.xls')
+    comp.index.name = "RV"+str(RV_atual)+' vs RV'+str(RV_anterior)
+    local = Path('saídas/carga/comparativo.xls')
     comp.to_excel(local)
     print("Cargas requisitadas calculadas e comparadas com sucesso!")
     
@@ -68,3 +69,4 @@ except:
     print("Algo deu errado com a carga mensal! Cheque o código")
 else:
     print("Carga mensal comparada com sucesso!")
+    

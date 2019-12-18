@@ -78,7 +78,8 @@ def exporta_carga(rv:int, mes, ano):
     carga_por_estag = limpa_carga(carga_bruto) #Armazena o vetor contendo em cada item o texto correspondente a cada estágio
     carga = separa_estags(carga_por_estag) #Armazena o vetor dos estágios, agora separados em vetores para cada submercado e cada texto e valor separado em um elemento próprio
     carga_decomp = organiza_tabela(carga, rv, mes, ano) #Armazena a tabela com as médias ponderadas identificada por estágio e por submercado
-    local = Path('saídas/carga/carga_RV'+str(rv)+'.xls') #Cria o diretório do arquivo a ser exportado
+    local = Path('saídas/carga/carga.xls') #Cria o diretório do arquivo a ser exportado
+    carga_decomp.index.name = "RV"+str(rv) #Identifica qual a revisão lida dentro do DF
     carga_decomp.to_excel(local) #Exporta
     return carga_decomp #Retorna para fins de comparação de tabelas posteriormente
             
