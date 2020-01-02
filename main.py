@@ -41,8 +41,8 @@ else:
     
 RV_atual = 2
 RV_anterior = 1
-mes = 12
-ano = 2019
+mes = 1
+ano = 2020
 
 
 try:
@@ -70,7 +70,6 @@ except:
 else:
     print("Carga mensal comparada com sucesso!")
     
-s,d,f,g,h = carga_mensal.compara_meses(ano, mes)
 
-a,b,c = carga_mensal.get_nome(True, ano, mes)
+a = carga_mensal.gera_nome(True, ano, mes)
 carga_mensal.exporta_tab(ano,mes)

@@ -20,13 +20,13 @@ def get_datas(prox: bool, anoin, mesin):
     ano_atual = data.year   #Pega o ano atual
     
     if(prox):     #prox é a variável booleana que define se você quer o próximo mês ou o anterior
-        mes_anterior = data.month + 1   #Pega o mês seguinte
-        ano_anterior = data.year + 1    #Pega o ano em que esse próximo mês está
+        mes_anterior = (data + dt.timedelta(days = 32)).month   #Pega o mês seguinte
+        ano_anterior = (data + dt.timedelta(days = 32)).year    #Pega o ano em que esse próximo mês está
         meses = [mes_atual, mes_anterior]   
         anos = [ano_atual, ano_anterior]
     else:
-        mes_anterior = data.month - 1   #Pega o mês anterior
-        ano_anterior = data.year - 1    #Pega o ano em que esse mês anterior está
+        mes_anterior = (data - dt.timedelta(days = 32)).month   #Pega o mês anterior
+        ano_anterior = (data - dt.timedelta(days = 32)).year   #Pega o ano em que esse mês anterior está
         meses = [mes_anterior, mes_atual]
         anos = [ano_anterior, ano_atual]
     return meses, anos #Em ambos os casos, os vetores são construídos da menor para a maior data
