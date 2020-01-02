@@ -12,28 +12,30 @@ from pathlib import Path
 
 
 #Função que calcula o intervalo de um mês e separa as informações de forma conveniente para o código
-def get_datas(prox: bool):
-    data = dt.date.today()  #Pega a data atual
+def get_datas(prox: bool, anoin, mesin):
+    # anoin = int(anoin)
+    # mesin = int(mesin)
+    data = dt.date(anoin, mesin, 1)  #Pega a data a ser avaliada
     mes_atual = data.month  #Pega o mês atual
     ano_atual = data.year   #Pega o ano atual
     
     if(prox):     #prox é a variável booleana que define se você quer o próximo mês ou o anterior
-        mes_anterior = (data + dt.timedelta(days = 30)).month   #Pega o mês seguinte
-        ano_anterior = (data + dt.timedelta(days = 30)).year    #Pega o ano em que esse próximo mês está
+        mes_anterior = (data + dt.timedelta(days = 32)).month   #Pega o mês seguinte
+        ano_anterior = (data + dt.timedelta(days = 32)).year    #Pega o ano em que esse próximo mês está
         meses = [mes_atual, mes_anterior]   
         anos = [ano_atual, ano_anterior]
     else:
-        mes_anterior = (data - dt.timedelta(days = 30)).month   #Pega o mês anterior
-        ano_anterior = (data - dt.timedelta(days = 30)).year    #Pega o ano em que esse mês anterior está
+        mes_anterior = (data - dt.timedelta(days = 32)).month   #Pega o mês anterior
+        ano_anterior = (data - dt.timedelta(days = 32)).year   #Pega o ano em que esse mês anterior está
         meses = [mes_anterior, mes_atual]
         anos = [ano_anterior, ano_atual]
     return meses, anos #Em ambos os casos, os vetores são construídos da menor para a maior data
 
 
 #Função que nomeia os meses escolhidos pelas funções de data
-def get_nome(prox):     #Para funcionar propriamente, tudo o que depende DIRETAMENTE da data
+def get_nome(prox, anoin, mesin):     #Para funcionar propriamente, tudo o que depende DIRETAMENTE da data
                         #precisa de um parâmetro booleano
-    meses, anos = get_datas(prox) #Seleciona as datas apropriadas em relação ao prox
+    meses, anos = get_datas(prox, anoin, mesin) #Seleciona as datas apropriadas em relação ao prox
     nomes = []
     for mes in meses:   #Só um "switch-case" para escrever o nome apropriado de cada mês
         if mes == 1: nomes.append('Janeiro')
@@ -52,17 +54,17 @@ def get_nome(prox):     #Para funcionar propriamente, tudo o que depende DIRETAM
 
 
 #Função gera os nomes dos arquivos dos meses apropriados
-def gera_nome(prox):
-    nomes, meses, anos = get_nome(prox) #Pega os nomes apropriados de acordo com prox
+def gera_nome(prox, anoin, mesin):
+    nomes, meses, anos = get_nome(prox, anoin, mesin) #Pega os nomes apropriados de acordo com prox
     for i, nome in enumerate(nomes):
         nomes[i] = "CargaMensal_PMO-" + nome + str(anos[i]) + ".xlsx" #Formata o local para a busca de arquivos de PMO
     return nomes
 
 
 #Função importa para dataframes os arquivos de PMO e os retorna separadamente
-def importa_cargas_mensais():
+def importa_cargas_mensais(anoin, mesin):
     local = Path('entradas/carga_mensal/')  #Cria caminho até a pasta dos PMO
-    nomes = gera_nome(False)    #Pega a data atual e a anterior
+    nomes = gera_nome(False, anoin, mesin)    #Pega a data atual e a anterior
     local0 = local / nomes[0]   #Pega o diretório do arquivo mais antigo
     local1 = local / nomes[1]   #Pega o diretório do arquivo mais recente
     tab_mes0 = pd.read_excel(local0)    #Importa os arquivos
@@ -71,9 +73,9 @@ def importa_cargas_mensais():
     
 
 #Função de tratamento e cálculo da diferença de M0 e M1 dos PMO de M0 e M-1
-def compara_meses():
-    tab_mes0, tab_mes1 = importa_cargas_mensais()
-    meses, anos = get_datas(True) # Pega a data atual e a próxima
+def compara_meses(anoin, mesin):
+    tab_mes0, tab_mes1 = importa_cargas_mensais(anoin, mesin)
+    meses, anos = get_datas(True, anoin, mesin) # Pega a data atual e a próxima
     datas = []
     for i in range(2):  #Esse for formata as datas para serem usadas nas queries
         datas.append(str(anos[i])+'-'+str(meses[i])+'-01')
@@ -116,8 +118,8 @@ def compara_semanal(tab1, mes, ano):
  
             
 #Função que recebe todos os dados tratados e os organiza em uma tabela
-def monta_tabela():
-    se,s,ne,n,csem = compara_meses()
+def monta_tabela(anoin, mesin):
+    se,s,ne,n,csem = compara_meses(anoin, mesin)
     # Renomeia as séries de acordo com o submercado apropriado
     se.name = 'SE'
     s.name = 'S'
@@ -125,7 +127,7 @@ def monta_tabela():
     n.name = 'N'
     tab = pd.concat([se,s,ne,n], axis=1) #Cria a tabela a partir das séries
     tab.sort_index(inplace = True) #Ordena as datas
-    nomes, meses, anos = get_nome(True) #Pega nomes dos meses, os números e os anos apropriados para o mês
+    nomes, meses, anos = get_nome(True, anoin, mesin) #Pega nomes dos meses, os números e os anos apropriados para o mês
     for i, nome in enumerate(nomes): 
         nomes[i] = nome+'_'+str(anos[i]) #Reescreve os nomes com os anos apropriados
     tab.index = nomes #Usa os novos nomes de índice
@@ -134,7 +136,7 @@ def monta_tabela():
     tab = tab.append(comp_sem) #Adiciona a série criada e propriamente nomeada na tabela das diferenças do PMO
     return tab, nomes[0] #Esse nome é o nome do mês atual, sendo retornado para uso na exportação do arquivo
 
-def exporta_tab():
-    tab, nome = monta_tabela()
+def exporta_tab(anoin, mesin):
+    tab, nome = monta_tabela(anoin, mesin)
     local = Path('saídas/carga/'+'PMO_'+nome+'.xls') #Exportação com o nome retornado na função anterior
     tab.to_excel(local)

@@ -41,8 +41,8 @@ else:
     
 RV_atual = 2
 RV_anterior = 1
-mes = 12
-ano = 2019
+mes = 1
+ano = 2020
 
 
 try:
@@ -62,7 +62,7 @@ else:
     
     
 try:
-    carga_mensal.exporta_tab()
+    carga_mensal.exporta_tab(ano,mes)
 except FileNotFoundError:
     print("As cargas semanais não foram calculadas propriamente ou algum PMO não está presente no diretório apropriado")
 except:
@@ -70,3 +70,6 @@ except:
 else:
     print("Carga mensal comparada com sucesso!")
     
+
+a = carga_mensal.gera_nome(True, ano, mes)
+carga_mensal.exporta_tab(ano,mes)
