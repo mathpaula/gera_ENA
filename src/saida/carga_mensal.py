@@ -34,7 +34,7 @@ def get_datas(prox: bool, anoin, mesin):
 
 #Função que nomeia os meses escolhidos pelas funções de data
 def get_nome(prox, anoin, mesin):     #Para funcionar propriamente, tudo o que depende DIRETAMENTE da data
-                        #precisa de um parâmetro booleano
+                                      #precisa de um parâmetro booleano
     meses, anos = get_datas(prox, anoin, mesin) #Seleciona as datas apropriadas em relação ao prox
     nomes = []
     for mes in meses:   #Só um "switch-case" para escrever o nome apropriado de cada mês

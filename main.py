@@ -71,5 +71,3 @@ else:
     print("Carga mensal comparada com sucesso!")
     
 
-a = carga_mensal.gera_nome(True, ano, mes)
-carga_mensal.exporta_tab(ano,mes)
