@@ -62,7 +62,7 @@ else:
     
     
 try:
-    carga_mensal.exporta_tab()
+    carga_mensal.exporta_tab(ano,mes)
 except FileNotFoundError:
     print("As cargas semanais não foram calculadas propriamente ou algum PMO não está presente no diretório apropriado")
 except:
@@ -70,3 +70,7 @@ except:
 else:
     print("Carga mensal comparada com sucesso!")
     
+s,d,f,g,h = carga_mensal.compara_meses(ano, mes)
+
+a,b,c = carga_mensal.get_nome(True, ano, mes)
+carga_mensal.exporta_tab(ano,mes)
