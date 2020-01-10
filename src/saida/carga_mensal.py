@@ -20,13 +20,13 @@ def get_datas(prox: bool, anoin, mesin):
     ano_atual = data.year   #Pega o ano atual
     
     if(prox):     #prox é a variável booleana que define se você quer o próximo mês ou o anterior
-        mes_anterior = (data + dt.timedelta(days = 32)).month   #Pega o mês seguinte
-        ano_anterior = (data + dt.timedelta(days = 32)).year    #Pega o ano em que esse próximo mês está
+        mes_anterior = (data + dt.timedelta(days = 31)).month   #Pega o mês seguinte
+        ano_anterior = (data + dt.timedelta(days = 31)).year    #Pega o ano em que esse próximo mês está
         meses = [mes_atual, mes_anterior]   
         anos = [ano_atual, ano_anterior]
     else:
-        mes_anterior = (data - dt.timedelta(days = 32)).month   #Pega o mês anterior
-        ano_anterior = (data - dt.timedelta(days = 32)).year   #Pega o ano em que esse mês anterior está
+        mes_anterior = (data - dt.timedelta(days = 31)).month   #Pega o mês anterior
+        ano_anterior = (data - dt.timedelta(days = 31)).year   #Pega o ano em que esse mês anterior está
         meses = [mes_anterior, mes_atual]
         anos = [ano_anterior, ano_atual]
     return meses, anos #Em ambos os casos, os vetores são construídos da menor para a maior data
@@ -96,16 +96,8 @@ def compara_meses(anoin, mesin):
 
 # Função que compara a previsão para M1 do PMO com a previsão do DECOMP
 def compara_semanal(tab1, mes, ano):
-    arquivos = Path('saídas/carga').glob('**/*') #Lista todos os arquivos do diretório de saída de carga 
-    files = [arquivo for arquivo in arquivos if arquivo.is_file()] #Organiza cada diretório em um vetor
-    loaded = False #Flag para identificar se um arquivo foi achado ou não
-    for file in files:  #Esses for encadeados acha a revisão mais recente presente na pasta
-        if loaded: break #Se o mais recente for achado, esse if impede que ele seja sobreposto por uma revisão mais antiga
-        for i in range(5,-1,-1): #For de 4 a 0 descrescendo
-            if(file == Path("saídas/carga/carga_RV"+str(i)+".xls")):
-                tab = pd.read_excel(file, index_col = 0)
-                loaded = True
-                break
+    local = Path('saídas/carga/carga.xls')     #Cria o diretório para o arquivo exportado (que é da revisão mais recente)
+    tab = pd.read_excel(local, index_col = 0)
     data = str(ano)+'-'+str(mes)+'-01'
     tab1.query('DATE == @data',inplace=True)
     tab1.set_index('SOURCE', inplace=True)

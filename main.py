@@ -70,4 +70,3 @@ except:
 else:
     print("Carga mensal comparada com sucesso!")
     
-
