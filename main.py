@@ -17,7 +17,7 @@ try:
 except FileNotFoundError:
     print("O acomph de hoje não foi encontrado!\nVerifique a pasta entrada/acomph e confirme se o arquivo se encontra lá")
 except:
-    print("Alguma outra coisa deu erradocom a ENA.\nVerifique se não houve alteração no código!")
+    print("Alguma outra coisa deu errado com a ENA.\nVerifique se não houve alteração no código!")
 else:
     ena_submercado.sort_index(ascending = False, inplace = True)
     
@@ -39,10 +39,10 @@ else:
     print("IPDO extraído com sucesso!")
 
     
-RV_atual = 2
-RV_anterior = 1
-mes = 1
-ano = 2020
+RV_atual = int(input('Digite a revisão atual: '))
+RV_anterior = int(input('Digite a revisão anterior: '))
+mes = int(input("Mês desejado: "))
+ano = int(input("Ano desejado: "))
 
 
 try:
