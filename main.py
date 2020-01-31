@@ -6,8 +6,22 @@ Created on Mon Nov 25 15:28:24 2019
 @author: mazucanti
 """
 
-from src.saida import ena, ipdo, carga, carga_mensal
 from pathlib import Path
+from sintegre.spiders.sintegre_spider import Sintegre_Spider
+from scrapy.crawler import CrawlerProcess
+from scrapy.utils.project import get_project_settings
+
+try:
+    process = CrawlerProcess(get_project_settings())
+    process.crawl(Sintegre_Spider)
+    process.start()
+except:
+    print("Reinicie o kernel para poder fazer o download dos arquivos!")
+
+
+from src import org_arquivos
+from src.saida import ena, ipdo, carga, carga_mensal
+
 
 try:
     ena_geral = ena.calc_ena()

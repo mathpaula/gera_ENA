@@ -43,14 +43,15 @@ def get_datas():
 
 # Cria uma tabela com as vazões dos postos base dos postos tipo 1 identificados pelos postos regredidos
 def trata_vazoes_base(acomph, a1):
-    vazoes_base = acomph.loc[a1.iloc[:,0], :] # pega no acomph as vazões base do arquivo a1
-    vazoes_base.reset_index(inplace=True)  #tira os postos base dos índices 
-    base = a1.reset_index() # recebe os índices de regressão sem os índices dos postos regredidos
-    indice = base.loc[:,'posto'] # Pega os valores dos postos em uma série para usar de índice
-    vazoes_base.insert(0, "ind", indice, allow_duplicates=True) #Adiciona os índices na coluna 0
-    vazoes_base.drop('posto', axis=1, inplace=True) # Remove a coluna de postos original
-    vazoes_base.rename(columns={'ind':'posto'}, inplace=True) #A coluna de índices se chama 'posto' agora
-    vazoes_base.set_index('posto', inplace=True) #posto é usada como novos índices
+    vazoes_base = a1.drop(['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11','12'], axis=1)
+    vazoes_base.reset_index(inplace=True)
+    vazoes_base.rename({'posto':'ind'}, axis=1, inplace=True)
+    vazoes_base.index = vazoes_base.loc[:,'base']
+    vazoes_base.index.name = 'posto'
+    vazoes_base = vazoes_base.join(acomph, on='posto', how='inner') # pega no acomph as vazões base do arquivo a1
+    vazoes_base.index = vazoes_base.loc[:,'ind']
+    vazoes_base.index.name = 'posto'
+    vazoes_base.drop(['ind','base'], axis=1, inplace=True)
     return vazoes_base
 
 
