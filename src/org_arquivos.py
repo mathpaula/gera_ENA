@@ -16,7 +16,7 @@ def main():
     extrai()
     diretorios = Path('downloads/full').glob('**/*')
     files = [diretorio for diretorio in diretorios if diretorio.is_file()]
-
+    files.sort(key=os.path.getmtime)
     for file in files:
         if file.suffix == ".txt":
             carga_semanal(file)
@@ -26,24 +26,26 @@ def main():
             acomph(file)
         elif file.suffix == ".xlsm":
             ipdo(file)
-        else:
+        elif file.suffix == ".xlsx":
             carga_mensal(file)
         
         
 def extrai():
-    diretorios = Path('downloads/full').glob('**/*')
+    diretorios = Path('downloads/full').glob('**/*/*')
     files = [diretorio for diretorio in diretorios if diretorio.is_file()]
     for file in files:
         if file.suffix == ".zip":
+            try:
                 with ZipFile(file) as zp:
                     zp.extractall('downloads/full')
-                os.unlink(file)
+            except:
+                continue
 
 
 def carga_semanal(file):
     rv = file.stem[len(file.stem)-2] if file.stem[len(file.stem)-1] == ')' else '0' 
     local = Path('entradas/carga/carga_RV%s' % rv)
-    shutil.move(file, local)
+    shutil.copy(file, local)
     
     
 def acomph(file):
@@ -52,7 +54,7 @@ def acomph(file):
              '0'+str(data.month) if data.month < 10 else str(data.month),
              data.year)
     local = Path('entradas/acomph/ACOMPH_%s.%s.%d.xls' % infos)
-    shutil.move(file, local)
+    shutil.copy(file, local)
     
     
 def ipdo(file):
@@ -61,14 +63,14 @@ def ipdo(file):
              '0'+str(data.month) if data.month < 10 else str(data.month),
              data.year)
     local = Path('entradas/ipdo/IPDO-%s-%s-%d.xlsm' % infos)
-    shutil.move(file, local)
+    shutil.copy(file, local)
     
     
 def carga_mensal(file):
-    data = dt.date.today() + dt.timedelta(weeks=4)
-    mes = get_nome(data)
-    local = Path('entradas/carga_mensal/CargaMensal_PMO-%s%d.xlsx' % (mes, data.year))
-    shutil.move(file, local)
+    data = [dt.date.today() - dt.timedelta(weeks = 4), dt.date.today(), dt.date.today() + dt.timedelta(weeks = 4)]
+    mes = get_nome(data[2])
+    local = Path('entradas/carga_mensal/CargaMensal_PMO-%s%d.xlsx' % (mes, data[2].year))
+    shutil.copy(file, local)
     
     
 def get_nome(data):
