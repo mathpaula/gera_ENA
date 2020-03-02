@@ -250,11 +250,11 @@ def posto_292():
             mes = (date.today()-timedelta(days = 30-i)).month
             if (mes == 1): vazao_base = 1100
             elif (mes == 2): vazao_base = 1600
-            elif (mes == 3): vazao_base = 4000
-            elif (mes == 4): vazao_base = 8000
-            elif (mes == 5): vazao_base = 4000
-            elif (mes == 6): vazao_base = 2000
-            elif (mes == 7): vazao_base = 1200
+            elif (mes == 3): vazao_base = 2500
+            elif (mes == 4): vazao_base = 4000
+            elif (mes == 5): vazao_base = 1800
+            elif (mes == 6): vazao_base = 1200
+            elif (mes == 7): vazao_base = 1000
             elif (mes == 8): vazao_base = 900
             elif (mes == 9): vazao_base = 750
             elif (mes == 10): vazao_base = 700

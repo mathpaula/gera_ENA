@@ -71,6 +71,9 @@ class Sintegre_Spider(scrapy.Spider):
     
     def carga_semanal(self, response):
         data = dt.date.today()
+        data += dt.timedelta(weeks=1)
+        data -= dt.timedelta(days = (data.isoweekday()))
+        data += dt.timedelta(days=5)
         mes = self.get_nome(data)
         urls = ["https://sintegre.ons.org.br/sites/9/47/_layouts/download.aspx?SourceUrl=/sites/9/47/Produtos/228/RV0_PMO_%s_carga_semanal.zip" % mes,
                 "https://sintegre.ons.org.br/sites/9/47/_layouts/download.aspx?SourceUrl=/sites/9/47/Produtos/228/RV1_PMO_%s_carga_semanal.zip" % mes,

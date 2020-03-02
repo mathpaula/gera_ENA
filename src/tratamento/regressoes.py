@@ -89,7 +89,7 @@ def regressao_tipo_1(acomph, a0, a1, postos):
 #A função cria um dicionário com todas as vazões de tipo 3 e as organiza em uma tabela
 def regressao_tipo_3():
     data_postos_tipo3 = {126: tipo3.posto_126(), 127: tipo3.posto_127(), 131: tipo3.posto_131(), 132: tipo3.posto_132(),
-                         176: tipo3.posto_176(), 285: tipo3.posto_285(), 292: tipo3.posto_292(), 298: tipo3.posto_298(), 
+                         176: tipo3.posto_176(), 292: tipo3.posto_292(), 298: tipo3.posto_298(), 
                          299: tipo3.posto_299(), 302: tipo3.posto_302(), 303: tipo3.posto_303(), 304: tipo3.posto_304(),
                          306: tipo3.posto_306(), 315: tipo3.posto_315(), 316: tipo3.posto_316(), 317: tipo3.posto_317(),
                          318: tipo3.posto_318(), 37: tipo3.posto_37(), 38: tipo3.posto_38(), 39: tipo3.posto_39(), 
