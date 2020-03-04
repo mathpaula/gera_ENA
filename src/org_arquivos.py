@@ -10,25 +10,23 @@ from zipfile import ZipFile
 import shutil, os
 from pathlib import Path
 import datetime as dt
+import hashlib
 
 
 def main():
     extrai()
     diretorios = Path('downloads/full').glob('**/*')
     files = [diretorio for diretorio in diretorios if diretorio.is_file()]
-    files.sort(key=os.path.getmtime)
     for file in files:
-        if file.suffix == ".txt":
+        if file.suffix == "":
             carga_semanal(file)
-        elif file.suffix == ".pdf":
-            os.unlink(file)
         elif file.suffix == ".xls":
             acomph(file)
         elif file.suffix == ".xlsm":
             ipdo(file)
         elif file.suffix == ".xlsx":
             carga_mensal(file)
-        
+        os.unlink(file)
         
 def extrai():
     diretorios = Path('downloads/full').glob('**/*')
@@ -58,10 +56,17 @@ def acomph(file):
     
     
 def ipdo(file):
-    data = dt.date.today() - dt.timedelta(days=1)
-    infos = ('0'+str(data.day) if data.day < 10 else str(data.day),
-             '0'+str(data.month) if data.month < 10 else str(data.month),
-             data.year)
+    hoje = dt.date.today() - dt.timedelta(days=1)
+    for i in range(31):
+        h = hashlib.sha1()
+        data = hoje - dt.timedelta(days=i)
+        dia = '0' + str(data.day) if data.day < 10 else str(data.day)
+        mes = '0' + str(data.month) if data.month < 10 else str(data.month) 
+        infos = (dia, mes, data.year)
+        url = "https://sintegre.ons.org.br/sites/7/39/_layouts/download.aspx?SourceUrl=https://sintegre.ons.org.br/sites/7/39/Produtos/156/IPDO-%s-%s-%d.xlsm" % infos
+        h.update(url.encode('utf-8'))
+        nome_hash = h.hexdigest()
+        if file.stem == nome_hash: break
     local = Path('entradas/ipdo/IPDO-%s-%s-%d.xlsm' % infos)
     shutil.copy(file, local)
     

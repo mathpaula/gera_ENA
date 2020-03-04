@@ -13,6 +13,8 @@ from scrapy.loader import ItemLoader
 from sintegre.items import SintegreItem
 
 
+
+
 class Sintegre_Spider(scrapy.Spider):
     name = "sintegre_spider"
     
@@ -68,6 +70,20 @@ class Sintegre_Spider(scrapy.Spider):
         loader.add_value('file_urls', url)
         yield loader.load_item()
         
+        
+    def ipdo(self, response):
+        hoje = dt.date.today() - dt.timedelta(days=1)
+        for i in range(31):
+            data = hoje - dt.timedelta(days=i)
+            dia = '0' + str(data.day) if data.day < 10 else str(data.day)
+            mes = '0' + str(data.month) if data.month < 10 else str(data.month) 
+            tupla_info = (dia, mes, data.year)
+            url = "https://sintegre.ons.org.br/sites/7/39/_layouts/download.aspx?SourceUrl=https://sintegre.ons.org.br/sites/7/39/Produtos/156/IPDO-%s-%s-%d.xlsm" % tupla_info
+            loader = ItemLoader(item=SintegreItem())
+            loader.add_value('file_urls', url)
+            yield loader.load_item()
+
+        
     
     def carga_semanal(self, response):
         data = dt.date.today()
@@ -94,16 +110,6 @@ class Sintegre_Spider(scrapy.Spider):
         loader.add_value('file_urls', url)
         yield loader.load_item()
     
-    
-    def ipdo(self, response):
-        hoje = dt.date.today() - dt.timedelta(days=1)
-        dia = '0' + str(hoje.day) if hoje.day < 10 else str(hoje.day)
-        mes = '0' + str(hoje.month) if hoje.month < 10 else str(hoje.month) 
-        tupla_info = (dia, mes, hoje.year)
-        url = "https://sintegre.ons.org.br/sites/7/39/_layouts/download.aspx?SourceUrl=https://sintegre.ons.org.br/sites/7/39/Produtos/156/IPDO-%s-%s-%d.xlsm" % tupla_info
-        loader = ItemLoader(item=SintegreItem())
-        loader.add_value('file_urls', url)
-        yield loader.load_item()
     
     def get_nome(self, data):
         mes = data.month
