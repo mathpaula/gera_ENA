@@ -18,7 +18,7 @@ def main():
     diretorios = Path('downloads/full').glob('**/*')
     files = [diretorio for diretorio in diretorios if diretorio.is_file()]
     for file in files:
-        if file.suffix == "":
+        if file.suffix == "" or file.suffix ==".txt":
             carga_semanal(file)
         elif file.suffix == ".xls":
             acomph(file)
