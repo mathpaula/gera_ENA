@@ -28,19 +28,19 @@ class Sintegre_Spider(scrapy.Spider):
     
     def login(self, response):
         yield scrapy.FormRequest.from_response(response,
-                                  formdata = {'username': 'vallim', 'password': 'Carvalho115'},
+                                  formdata = {'username': 'vallim', 'password': 'Skopos2020'},
                                   callback = self.debug_login)
      
         
     def debug_login(self, response):
         yield scrapy.FormRequest.from_response(response, 
-                                               formdata = {'username': 'vallim', 'password': 'Carvalho115'},
+                                               formdata = {'username': 'vallim', 'password': 'Skopos2020'},
                                                callback = self.after_login)
     
     
     def after_login(self, response):
         yield scrapy.FormRequest.from_response(response, 
-                                               formdata = {'username': 'vallim', 'password': 'Carvalho115'},
+                                               formdata = {'username': 'vallim', 'password': 'Skopos2020'},
                                                callback = self.parse_all)
         
         
