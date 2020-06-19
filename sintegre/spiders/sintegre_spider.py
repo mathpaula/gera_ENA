@@ -23,24 +23,36 @@ class Sintegre_Spider(scrapy.Spider):
        urls = ['https://pops.ons.org.br/ons.pop.federation/?wa=wsignin1.0&wtrealm=https%3a%2f%2fsintegre.ons.org.br%2f_trust%2fdefault.aspx&wctx=https%3a%2f%2fsintegre.ons.org.br%2fsites%2f9%2f_layouts%2f15%2fAuthenticate.aspx%3fSource%3d%252Fsites%252F9%252F&wreply=https%3a%2f%2fsintegre.ons.org.br%2f_trust%2fdefault.aspx']
        
        for url in urls:
-           yield scrapy.Request(url = url, callback = self.login)
+        #    yield scrapy.Request(url = url, callback = self.login)
+            yield scrapy.Request(url = url, callback = self.usrnm)
             
     
-    def login(self, response):
+    def usrnm(self, response):
         yield scrapy.FormRequest.from_response(response,
-                                  formdata = {'username': 'vallim', 'password': 'Skopos2020'},
-                                  callback = self.debug_login)
+                                               formdata = {'username': 'vallim'},
+                                               callback = self.pswrd)
+    
+
+    def pswrd(self, response):
+        yield scrapy.FormRequest.from_response(response,
+                                               formdata = { 'password': 'Skopos2020'},
+                                               callback = self.debug_login)
+
+    # def login(self, response):
+        # yield scrapy.FormRequest.from_response(response,
+        #                           formdata = {'username': 'vallim', 'password': 'Skopos2020'},
+        #                           callback = self.debug_login)
      
         
     def debug_login(self, response):
         yield scrapy.FormRequest.from_response(response, 
-                                               formdata = {'username': 'vallim', 'password': 'Skopos2020'},
+                                               formdata = {'password': 'Skopos2020'},
                                                callback = self.after_login)
     
     
     def after_login(self, response):
         yield scrapy.FormRequest.from_response(response, 
-                                               formdata = {'username': 'vallim', 'password': 'Skopos2020'},
+                                               formdata = {'password': 'Skopos2020'},
                                                callback = self.parse_all)
         
         
