@@ -6,6 +6,7 @@ Created on Mon Nov 25 15:28:24 2019
 @author: mazucanti
 """
 
+from xlrd import XLRDError
 from pathlib import Path
 from sintegre.spiders.sintegre_spider import Sintegre_Spider
 from scrapy.crawler import CrawlerProcess
@@ -30,6 +31,8 @@ try:
     ena_ree = ena.ena_ree(ena_geral)
 except FileNotFoundError:
     print("O acomph de hoje não foi encontrado!\nVerifique a pasta entrada/acomph e confirme se o arquivo se encontra lá")
+except XLRDError:
+    print("O acomph ainda não foi disponibilizado!")
 except:
     print("Alguma outra coisa deu errado com a ENA.\nVerifique se não houve alteração no código!")
 else:
@@ -47,6 +50,8 @@ try:
     ipdo.exporta_ipdo()
 except FileNotFoundError:
     print("Algum arquivo de IPDO dos últimos 30 dias não foi encontrado!")
+except XLRDError:
+    print("O IPDO ainda não foi disponibilizado!")
 except:
     print("Alguma outra coisa deu errado com o IPDO.\nVerifique se não houve alteração no código!")
 else:

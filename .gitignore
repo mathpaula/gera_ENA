@@ -102,3 +102,11 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+#Entradas variáveis
+entradas/carga/carga_RV0
+entradas/carga/carga_RV1
+entradas/carga/carga_RV2
+entradas/carga/carga_RV3
+saídas/carga/carga.xls
+saídas/carga/comparativo.xls
