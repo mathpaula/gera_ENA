@@ -58,10 +58,16 @@ def divide_infos():
     ipdo = importa_plan(datas) #Armazena todas as planilhas em ordem crescente de data
     table = [] #Tabelas de cada ipdo em ordem de data crescente
     for plan in ipdo: #Itera as planilhas
-        plan.drop(['Unnamed: 0', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4',
-               'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7',
-                'Unnamed: 8','Unnamed: 9', 'Unnamed: 11', 
-                'Unnamed: 13'], axis = 1, inplace = True) #Remove todas as colunas inúteis do df
+        try:
+            plan.drop(['Unnamed: 0', 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4',
+                'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7',
+                    'Unnamed: 8','Unnamed: 9', 'Unnamed: 11', 
+                    'Unnamed: 13'], axis = 1, inplace = True) #Remove todas as colunas inúteis do df
+        except KeyError:
+            plan.drop([22, 'Unnamed: 1', 'Unnamed: 2', 'Unnamed: 3', 'Unnamed: 4',
+                'Unnamed: 5', 'Unnamed: 6', 'Unnamed: 7',
+                    'Unnamed: 8','Unnamed: 9', 'Unnamed: 11', 
+                    'Unnamed: 13'], axis = 1, inplace = True) #Remove todas as colunas inúteis do df
         plan.drop([59], inplace=True) #Remove linha inútil
         table.append(plan.loc[58:63, 'DADOS':'Unnamed: 23']) # Recorta a tabela dos ipdo
 
