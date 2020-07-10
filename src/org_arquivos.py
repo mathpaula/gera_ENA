@@ -37,6 +37,7 @@ def extrai():
                 with ZipFile(file) as zp:
                     zp.extractall('downloads/full')
             except:
+                print("O arquivo ainda não foi disponibilizado no sintegre")
                 continue
 
 
