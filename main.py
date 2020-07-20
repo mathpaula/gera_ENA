@@ -36,8 +36,8 @@ except XLRDError:
 except:
     print("Alguma outra coisa deu errado com a ENA.\nVerifique se não houve alteração no código!")
 else:
-    ena_submercado.sort_index(ascending = False, inplace = True)
-    
+    ena_submercado.sort_index(ascending=False, inplace=True)
+
     ena.exporta_ena(ena_geral, 'ENA')
     ena.exporta_ena(ena_submercado, 'ENA_Sub_Mer')
     ena.exporta_ena(ena_ree, 'ENA_REE')
@@ -45,8 +45,7 @@ else:
     print('ENA calculada com sucesso!')
 
 
-   
-try:    
+try:
     ipdo.exporta_ipdo()
 except FileNotFoundError:
     print("Algum arquivo de IPDO dos últimos 30 dias não foi encontrado!")
@@ -57,7 +56,7 @@ except:
 else:
     print("IPDO extraído com sucesso!")
 
-    
+
 RV_atual = int(input('Digite a revisão atual: '))
 RV_anterior = int(input('Digite a revisão anterior: '))
 mes = int(input("Mês desejado: "))
@@ -73,19 +72,18 @@ except:
     print("Alguma outra coisa deu errado com a carga.\nVerifique se não houve alteração no código!")
 else:
     comp = atual - anterior
-    comp.dropna(inplace = True)
+    comp.dropna(inplace=True)
     comp.index.name = "RV"+str(RV_atual)+' vs RV'+str(RV_anterior)
     local = Path('saídas/carga/comparativo.xls')
     comp.to_excel(local)
     print("Cargas requisitadas calculadas e comparadas com sucesso!")
-    
-    
+
+
 try:
-    carga_mensal.exporta_tab(ano,mes)
+    carga_mensal.exporta_tab(ano, mes)
 except FileNotFoundError:
     print("As cargas semanais não foram calculadas propriamente ou algum PMO não está presente no diretório apropriado")
 except:
     print("Algo deu errado com a carga mensal! Cheque o código")
 else:
     print("Carga mensal comparada com sucesso!")
-    
