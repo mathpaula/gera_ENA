@@ -107,8 +107,6 @@ def ex_final():
 
     caminho = Path("saídas/vazoes/acomph.csv")
     df.to_csv(caminho)
-    caminho_bd = Path("saídas/BD/acomph.csv")
-    df.T.to_csv(caminho_bd)
 
 
 # In[7]:
