@@ -8,13 +8,14 @@ import pandas as pd
 from pathlib import Path
 
 
-# ### 
+# ###
 # %% Importação das Regressões Semanais
 
 def importa_planilha():
     local_regress = Path("entradas/regressao/Regressões_PMO_2019.xls")
-    df = pd.ExcelFile(local_regress) #Armazena a planilha de regressões em df
-    regress =  df.parse("Correlações_Semanais", header=4) #Pega somente a aba "Correlações semanais da planilha
+    df = pd.ExcelFile(local_regress)  # Armazena a planilha de regressões em df
+    # Pega somente a aba "Correlações semanais da planilha
+    regress = df.parse("Correlações_Semanais", header=4)
     return regress
 
 
@@ -22,18 +23,21 @@ def importa_planilha():
 
 
 def trata_planilha():
-    df = importa_planilha() #Recebe as Correlações Semanais
-    df.drop('Unnamed: 17',axis=1, inplace=True) #Retira uma coluna sem valores
-    df.dropna(inplace=True) # Retira linhas com dados faltantes
-    df.rename(columns={'Código':'posto'}, inplace=True) #Renomeia a identificação dos postos para padronizar queries
-    df.set_index('posto', inplace=True) #Coloca a coluna 'posto' como índice das linhas
+    df = importa_planilha()  # Recebe as Correlações Semanais
+    # Retira uma coluna sem valores
+    df.drop('Unnamed: 17', axis=1, inplace=True)
+    df.dropna(inplace=True)  # Retira linhas com dados faltantes
+    # Renomeia a identificação dos postos para padronizar queries
+    df.rename(columns={'Código': 'posto'}, inplace=True)
+    # Coloca a coluna 'posto' como índice das linhas
+    df.set_index('posto', inplace=True)
     df.drop(['Aproveitamento',
              'Aproveitamento.1',
              'Código.1',
              'Unnamed: 3',
              'Unnamed: 4',
              'Unnamed: 22'],
-            axis=1, inplace=True) #Remove todas as informações irrelevantes para o processo de extração dos coeficientes
+            axis=1, inplace=True)  # Remove todas as informações irrelevantes para o processo de extração dos coeficientes
     return df
 
 
@@ -41,15 +45,17 @@ def trata_planilha():
 
 
 def separa_a0_a1():
-    df = trata_planilha() # recebe as correlações semanais tratadas
-    df.drop(['Unnamed: 0','Unnamed: 18'], axis=1, inplace=True) #Remove dados redundantes
-    a0 = df.iloc[:,0:12].copy() #Separa coeficientes de A0
-    a1 = df.iloc[:,12:25].copy() #Separa coeficientes de A1
-    a1.rename(columns={'Unnamed: 21':'base'}, inplace=True) # Renomeia a coluna que identifica os postos base
-    for i in range(1,13): #Itera o número de colunas de A1 para retirar a nomeação automática
-        a1.rename(columns={(str(i)+'.1') : str(i)}, inplace=True)
-    a0.sort_index(inplace = True) #Organiza os postos em ordem crescente
-    a1.sort_index(inplace = True) #idem
+    df = trata_planilha()  # recebe as correlações semanais tratadas
+    df.drop(['Unnamed: 0', 'Unnamed: 18'], axis=1,
+            inplace=True)  # Remove dados redundantes
+    a0 = df.iloc[:, 0:12].copy()  # Separa coeficientes de A0
+    a1 = df.iloc[:, 12:25].copy()  # Separa coeficientes de A1
+    # Renomeia a coluna que identifica os postos base
+    a1.rename(columns={'Unnamed: 21': 'base'}, inplace=True)
+    for i in range(1, 13):  # Itera o número de colunas de A1 para retirar a nomeação automática
+        a1.rename(columns={(str(i)+'.1'): str(i)}, inplace=True)
+    a0.sort_index(inplace=True)  # Organiza os postos em ordem crescente
+    a1.sort_index(inplace=True)  # idem
     return a0, a1
 
 
@@ -58,8 +64,8 @@ def separa_a0_a1():
 
 def exporta_csv():
     a0, a1 = separa_a0_a1()
-    #Exporta os CSV de cada coeficiente de regressão
-    local_a0 = Path("saídas/regressao/Regressão_A0.csv") 
+    # Exporta os CSV de cada coeficiente de regressão
+    local_a0 = Path("saídas/regressao/Regressão_A0.csv")
     local_a1 = Path("saídas/regressao/Regressão_A1.csv")
     a0.to_csv(local_a0)
     a1.to_csv(local_a1)
@@ -67,7 +73,7 @@ def exporta_csv():
 
 # In[7]:
 
-#Função de importação dos csv
+# Função de importação dos csv
 def get_csv():
     local_a0 = Path("saídas/regressao/Regressão_A0.csv")
     local_a1 = Path("saídas/regressao/Regressão_A1.csv")
@@ -77,4 +83,3 @@ def get_csv():
 
 
 # %%
-
