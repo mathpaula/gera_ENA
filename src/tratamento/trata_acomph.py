@@ -103,10 +103,11 @@ def trata():
 
 def ex_final():
     df = trata()
-    # A mesma biblioteca pathlib é usada para garantir portabilidade entre SO
-
+    # A mesma biblioteca pathlib é usada para garantir portabilidade entre SO   
     caminho = Path("saídas/vazoes/acomph.csv")
     df.to_csv(caminho)
+    caminho = Path("saídas/BD/acomph.csv")
+    df.T.to_csv(caminho)
 
 
 # In[7]:
