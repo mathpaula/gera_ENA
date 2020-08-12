@@ -25,7 +25,10 @@ from src.saida import ena, ipdo, carga, carga_mensal
 
 
 try:
-    ena.calc_ena()
+    ena_g = ena.calc_ena()
+    ena_s = ena.ena_mercados(ena_g)
+    ena_r = ena.ena_ree(ena_g)
+    ena_b = ena.ena_bacia(ena_g)
 except FileNotFoundError:
     print("O acomph de hoje não foi encontrado!\nVerifique a pasta entrada/acomph e confirme se o arquivo se encontra lá")
 except XLRDError:
@@ -33,6 +36,10 @@ except XLRDError:
 except:
     print("Alguma outra coisa deu errado com a ENA.\nVerifique se não houve alteração no código!")
 else:
+    ena.exporta_ena(ena_b, "bacias")
+    ena.exporta_ena(ena_r, "ree")
+    ena.exporta_ena(ena_s, "mercados")
+    ena.exporta_ena(ena_g, "postos")
     print('ENA calculada com sucesso!')
 
 
