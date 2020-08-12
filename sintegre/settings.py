@@ -73,7 +73,7 @@ ITEM_PIPELINES = {
     'scrapy.pipelines.files.FilesPipeline': 1,
     'sintegre.pipelines.SintegrePipeline': 300,    
 }
-FILES_STORE = '../gera_ENA/downloads'
+FILES_STORE = './downloads'
 MEDIA_ALLOW_REDIRECTS = True
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -78,3 +78,6 @@ except:
     print("Algo deu errado com a carga mensal! Cheque o código")
 else:
     print("Carga mensal comparada com sucesso!")
+
+
+from src import bd

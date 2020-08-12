@@ -136,9 +136,11 @@ def monta_tabela():
         # Faz isso para cada submercado individualmente
         tabelas[i]['Data'] = data
         tabelas[i].set_index('Data', append=True, inplace=True)
+
     tab = pd.concat(tabelas, axis=0)
     tab['Carga Programada'] = cargas['Carga Programada']
     tab['Carga Verificada'] = cargas['Carga Verificada']
+    tab['Valor EAR no dia %'] = tab['Valor EAR no dia %'].str.replace(",", ".")
     return tab
 
 
@@ -164,4 +166,3 @@ def exporta_ipdo():
     # Exporta para a pasta de ipdo nas sáidas como xls
     local = Path('saídas/BD/ipdo.csv')
     tab.to_csv(local)
-
