@@ -25,10 +25,10 @@ from src.saida import ena, ipdo, carga, carga_mensal
 
 
 try:
-    ena_geral = ena.calc_ena()
-    ena_submercado = ena.ena_mercados(ena_geral)
-    ena_bacias = ena.ena_bacia(ena_geral)
-    ena_ree = ena.ena_ree(ena_geral)
+    ena_g = ena.calc_ena()
+    ena_s = ena.ena_mercados(ena_g)
+    ena_r = ena.ena_ree(ena_g)
+    ena_b = ena.ena_bacia(ena_g)
 except FileNotFoundError:
     print("O acomph de hoje não foi encontrado!\nVerifique a pasta entrada/acomph e confirme se o arquivo se encontra lá")
 except XLRDError:
@@ -36,17 +36,14 @@ except XLRDError:
 except:
     print("Alguma outra coisa deu errado com a ENA.\nVerifique se não houve alteração no código!")
 else:
-    ena_submercado.sort_index(ascending = False, inplace = True)
-    
-    ena.exporta_ena(ena_geral, 'ENA')
-    ena.exporta_ena(ena_submercado, 'ENA_Sub_Mer')
-    ena.exporta_ena(ena_ree, 'ENA_REE')
-    ena.exporta_ena(ena_bacias, 'ENA_Bacias')
+    ena.exporta_ena(ena_b, "bacias")
+    ena.exporta_ena(ena_r, "ree")
+    ena.exporta_ena(ena_s, "mercados")
+    ena.exporta_ena(ena_g, "postos")
     print('ENA calculada com sucesso!')
 
 
-   
-try:    
+try:
     ipdo.exporta_ipdo()
 except FileNotFoundError:
     print("Algum arquivo de IPDO dos últimos 30 dias não foi encontrado!")
@@ -57,7 +54,7 @@ except:
 else:
     print("IPDO extraído com sucesso!")
 
-    
+
 RV_atual = int(input('Digite a revisão atual: '))
 RV_anterior = int(input('Digite a revisão anterior: '))
 mes = int(input("Mês desejado: "))
@@ -73,19 +70,21 @@ except:
     print("Alguma outra coisa deu errado com a carga.\nVerifique se não houve alteração no código!")
 else:
     comp = atual - anterior
-    comp.dropna(inplace = True)
+    comp.dropna(inplace=True)
     comp.index.name = "RV"+str(RV_atual)+' vs RV'+str(RV_anterior)
     local = Path('saídas/carga/comparativo.xls')
     comp.to_excel(local)
     print("Cargas requisitadas calculadas e comparadas com sucesso!")
-    
-    
+
+
 try:
-    carga_mensal.exporta_tab(ano,mes)
+    carga_mensal.exporta_tab(ano, mes)
 except FileNotFoundError:
     print("As cargas semanais não foram calculadas propriamente ou algum PMO não está presente no diretório apropriado")
 except:
     print("Algo deu errado com a carga mensal! Cheque o código")
 else:
     print("Carga mensal comparada com sucesso!")
-    
+
+
+from src import bd
