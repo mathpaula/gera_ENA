@@ -33,6 +33,7 @@ cur.execute("delete from ena_base \
             insert into ena_base\
                 select * from ena;")
 
+conn.commit()
 
 cur.close()
 conn.close()
