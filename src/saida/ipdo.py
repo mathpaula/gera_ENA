@@ -140,7 +140,7 @@ def monta_tabela():
     tab = pd.concat(tabelas, axis=0)
     tab['Carga Programada'] = cargas['Carga Programada']
     tab['Carga Verificada'] = cargas['Carga Verificada']
-    tab['Valor EAR no dia %'] = tab['Valor EAR no dia %'].str.replace(",", ".")
+    # tab['Valor EAR no dia %'] = tab['Valor EAR no dia %'].str.replace(",", ".")
     return tab
 
 
