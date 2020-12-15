@@ -1,5 +1,7 @@
 import psycopg2
 from pathlib import Path
+import pandas as pd
+from datetime import date
 
 conn = psycopg2.connect(
     "dbname='ENERGIA' host='192.168.0.251' user='script' password='batata'")
@@ -23,6 +25,24 @@ conn.commit()
 cur.execute("delete from ena;")
 
 ena = Path('saídas/BD/ena.csv')
+df = pd.read_csv(ena)
+
+df.rename(columns={"Unnamed: 0": "data_dado"}, inplace=True)
+cols = df.columns.to_list()
+cols.pop(0)
+
+df = df.melt(id_vars=["data_dado"], value_vars=cols,
+             var_name="posto", value_name="ena")
+
+df["data_arquivo"] = date.today()
+
+n_cols = ["data_arquivo", "data_dado", "posto", "ena"]
+
+df = df[n_cols]
+df.set_index("data_arquivo", inplace=True)
+
+df.to_csv("debug.csv")
+
 with open(ena, 'r') as fp:
 
     header = fp.readline()
@@ -37,4 +57,5 @@ conn.commit()
 
 cur.close()
 conn.close()
+
 

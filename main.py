@@ -24,6 +24,7 @@ from src import org_arquivos
 from src.saida import ena, ipdo, carga, carga_mensal
 
 
+
 try:
     ena_g = ena.calc_ena()
     ena_s = ena.ena_mercados(ena_g)

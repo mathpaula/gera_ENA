@@ -33,6 +33,7 @@ def corrige_local_acomph():
 
 def get_data():
     data = dt.datetime.today()
+    data_arquivo = Path("saídas/BD/data_ena")
     dia = data.day
     # Condicional que coloca o 0 de corno que tem em toda planilha
     if dia < 10:
